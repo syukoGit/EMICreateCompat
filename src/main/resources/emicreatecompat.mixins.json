@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "CategoryEntryAccessor",
+    "StockKeeperRequestScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
