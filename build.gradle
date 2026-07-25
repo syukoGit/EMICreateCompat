@@ -5,7 +5,9 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.142'
 }
 
-version = mod_version
+def resolvedVersion = (System.getenv('MOD_VERSION') ?: mod_version).replaceFirst(/^v/, '')
+
+version = resolvedVersion
 group = mod_group_id
 
 repositories {
@@ -91,7 +93,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
                              mod_id                 : mod_id,
                              mod_name               : mod_name,
                              mod_license            : mod_license,
-                             mod_version            : mod_version,
+                             mod_version: resolvedVersion,
                              mod_authors            : mod_authors,
                              mod_description        : mod_description]
     inputs.properties replaceProperties
