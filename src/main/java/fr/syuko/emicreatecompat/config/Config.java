@@ -6,9 +6,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/**
- * Client config for the Stock Keeper recipe-tree category.
- */
 @EventBusSubscriber(modid = Emicreatecompat.MODID)
 public final class Config {
 
@@ -25,12 +22,11 @@ public final class Config {
             .defineEnum("treeVisibility", TreeVisibility.ALWAYS);
 
     private static final ModConfigSpec.BooleanValue COUNT_PENDING_ORDER = BUILDER
-            .comment("Count items already queued in the Stock Keeper order basket (the list before you",
-                    "press send) as if they were in the player inventory, so the recipe tree updates",
-                    "live as you build your order.")
+            .comment("Count items already queued in the Stock Keeper order basket",
+                    "(the list before you press send) as if they were in the player inventory, ",
+                    "so the recipe tree updates live as you build your order.")
             .define("countPendingOrder", true);
 
-    // Must be built AFTER every define(...) call, otherwise the options aren't registered.
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;

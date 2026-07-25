@@ -21,11 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Thin adapter over Create's Stock Keeper request screen. Captures the {@code refreshSearchResults}
- * tick, gathers screen state, and delegates the actual work to the {@code emi} reader and the
- * {@code create} injector; holds no business logic of its own.
- */
 @Mixin(StockKeeperRequestScreen.class)
 public abstract class StockKeeperRequestScreenMixin {
 
@@ -55,11 +50,8 @@ public abstract class StockKeeperRequestScreenMixin {
             return;
         }
 
-        // Optionally treat items already queued in the order basket as owned, so the tree updates
-        // live as the player builds the order.
         List<ItemStack> pendingOrder = Config.countPendingOrder ? PendingOrder.stacks(itemsToOrder) : List.of();
 
-        // Resources the EMI recipe tree still needs (final + intermediates + leaves).
         Set<Item> needed = EmiRecipeTreeReader.neededTreeItems(pendingOrder);
         List<BigItemStack> matches = StockMatcher.match(needed, currentItemSource);
         if (matches.isEmpty()) {
@@ -75,8 +67,6 @@ public abstract class StockKeeperRequestScreenMixin {
 
     @Inject(method = "removed", at = @At("TAIL"))
     private void emicreatecompat$restoreEmiFavorites(CallbackInfo ci) {
-        // We may have driven EMI's native favorites display off a pending-order snapshot; put it back
-        // on the real player inventory now that the Stock Keeper is closing.
         if (Config.countPendingOrder) {
             EmiRecipeTreeReader.restoreNativeFavorites();
         }

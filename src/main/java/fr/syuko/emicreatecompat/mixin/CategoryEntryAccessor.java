@@ -4,10 +4,6 @@ import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScree
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-/**
- * Exposes the package-private layout fields of Create's
- * {@code StockKeeperRequestScreen.CategoryEntry} so we can position our injected category.
- */
 @Mixin(StockKeeperRequestScreen.CategoryEntry.class)
 public interface CategoryEntryAccessor {
 
