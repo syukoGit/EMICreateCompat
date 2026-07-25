@@ -1,5 +1,6 @@
-package fr.syuko.emicreatecompat;
+package fr.syuko.emicreatecompat.config;
 
+import fr.syuko.emicreatecompat.Emicreatecompat;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -23,13 +24,14 @@ public final class Config {
                     " CRAFTING_MODE_ONLY = only while EMI's recipe-tree (crafting) view is enabled.")
             .defineEnum("treeVisibility", TreeVisibility.ALWAYS);
 
-    // Must be built AFTER every define(...) call, otherwise the options aren't registered.
-    public static final ModConfigSpec SPEC = BUILDER.build();
     private static final ModConfigSpec.BooleanValue COUNT_PENDING_ORDER = BUILDER
             .comment("Count items already queued in the Stock Keeper order basket (the list before you",
                     "press send) as if they were in the player inventory, so the recipe tree updates",
                     "live as you build your order.")
             .define("countPendingOrder", true);
+
+    // Must be built AFTER every define(...) call, otherwise the options aren't registered.
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;
     public static TreeVisibility treeVisibility = TreeVisibility.ALWAYS;

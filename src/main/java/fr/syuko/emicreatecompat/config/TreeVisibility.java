@@ -1,4 +1,4 @@
-package fr.syuko.emicreatecompat;
+package fr.syuko.emicreatecompat.config;
 
 /**
  * When the injected category should be shown.

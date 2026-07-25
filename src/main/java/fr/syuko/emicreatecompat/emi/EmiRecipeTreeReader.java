@@ -9,8 +9,8 @@ import dev.emi.emi.bom.MaterialNode;
 import dev.emi.emi.bom.MaterialTree;
 import dev.emi.emi.bom.ProgressState;
 import dev.emi.emi.runtime.EmiFavorites;
-import fr.syuko.emicreatecompat.Config;
-import fr.syuko.emicreatecompat.TreeVisibility;
+import fr.syuko.emicreatecompat.config.Config;
+import fr.syuko.emicreatecompat.config.TreeVisibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
@@ -30,9 +30,9 @@ import java.util.Set;
  * with their subtree, mirroring EMI's own calculation (which stops recursing once a node is met).
  * The tree costs are recomputed against the inventory first, exactly like EMI's BoMScreen does.
  */
-public final class RecipeTreeResources {
+public final class EmiRecipeTreeReader {
 
-    private RecipeTreeResources() {
+    private EmiRecipeTreeReader() {
     }
 
     /**

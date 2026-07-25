@@ -1,6 +1,7 @@
 package fr.syuko.emicreatecompat;
 
 import com.mojang.logging.LogUtils;
+import fr.syuko.emicreatecompat.config.Config;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
