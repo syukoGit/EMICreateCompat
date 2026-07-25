@@ -23,10 +23,17 @@ public final class Config {
                     " CRAFTING_MODE_ONLY = only while EMI's recipe-tree (crafting) view is enabled.")
             .defineEnum("treeVisibility", TreeVisibility.ALWAYS);
 
+    // Must be built AFTER every define(...) call, otherwise the options aren't registered.
     public static final ModConfigSpec SPEC = BUILDER.build();
+    private static final ModConfigSpec.BooleanValue COUNT_PENDING_ORDER = BUILDER
+            .comment("Count items already queued in the Stock Keeper order basket (the list before you",
+                    "press send) as if they were in the player inventory, so the recipe tree updates",
+                    "live as you build your order.")
+            .define("countPendingOrder", true);
 
     public static boolean enabled = true;
     public static TreeVisibility treeVisibility = TreeVisibility.ALWAYS;
+    public static boolean countPendingOrder = true;
 
     private Config() {
     }
@@ -38,5 +45,6 @@ public final class Config {
         }
         enabled = ENABLED.get();
         treeVisibility = TREE_VISIBILITY.get();
+        countPendingOrder = COUNT_PENDING_ORDER.get();
     }
 }

@@ -3,9 +3,11 @@ package fr.syuko.emicreatecompat.mixin;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScreen;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScreen.CategoryEntry;
+import fr.syuko.emicreatecompat.Config;
 import fr.syuko.emicreatecompat.emi.RecipeTreeResources;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,6 +38,9 @@ public abstract class StockKeeperRequestScreenMixin {
     public List<List<BigItemStack>> displayedItems;
 
     @Shadow(remap = false)
+    public List<BigItemStack> itemsToOrder;
+
+    @Shadow(remap = false)
     @Final
     int rowHeight;
 
@@ -49,8 +54,20 @@ public abstract class StockKeeperRequestScreenMixin {
             return;
         }
 
+        // Optionally treat items already queued in the order basket as owned, so the tree updates
+        // live as the player builds the order. Each entry's requested count becomes the stack size.
+        List<ItemStack> pendingOrder = List.of();
+        if (Config.countPendingOrder && itemsToOrder != null && !itemsToOrder.isEmpty()) {
+            pendingOrder = new ArrayList<>();
+            for (BigItemStack ordered : itemsToOrder) {
+                if (ordered.stack != null && !ordered.stack.isEmpty() && ordered.count > 0) {
+                    pendingOrder.add(ordered.stack.copyWithCount(ordered.count));
+                }
+            }
+        }
+
         // Resources the EMI recipe tree still needs (final + intermediates + leaves).
-        Set<Item> needed = RecipeTreeResources.neededTreeItems();
+        Set<Item> needed = RecipeTreeResources.neededTreeItems(pendingOrder);
         if (needed.isEmpty()) {
             return;
         }
@@ -95,7 +112,7 @@ public abstract class StockKeeperRequestScreenMixin {
         int y = 0;
         for (int i = 0; i < displayedItems.size(); i++) {
             CategoryEntry entry = categories.get(i);
-            CategoryEntryAccessor accessor = (CategoryEntryAccessor) (Object) entry;
+            CategoryEntryAccessor accessor = (CategoryEntryAccessor) entry;
             accessor.emicreatecompat$setY(y);
             List<BigItemStack> items = displayedItems.get(i);
             if (items.isEmpty()) {
@@ -105,6 +122,15 @@ public abstract class StockKeeperRequestScreenMixin {
             if (!accessor.emicreatecompat$isHidden()) {
                 y += (int) Math.ceil(items.size() / (float) cols) * rowHeight;
             }
+        }
+    }
+
+    @Inject(method = "removed", at = @At("TAIL"))
+    private void emicreatecompat$restoreEmiFavorites(CallbackInfo ci) {
+        // We may have driven EMI's native favorites display off a pending-order snapshot; put it back
+        // on the real player inventory now that the Stock Keeper is closing.
+        if (Config.countPendingOrder) {
+            RecipeTreeResources.restoreNativeFavorites();
         }
     }
 }
