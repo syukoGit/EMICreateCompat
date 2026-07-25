@@ -1,7 +1,9 @@
 package fr.syuko.emicreatecompat;
 
 import com.mojang.logging.LogUtils;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
 @Mod(Emicreatecompat.MODID)
@@ -10,7 +12,8 @@ public class Emicreatecompat {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public Emicreatecompat() {
+    public Emicreatecompat(ModContainer modContainer) {
         LOGGER.info("EMICreateCompat loading");
+        modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
     }
 }

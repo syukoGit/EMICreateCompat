@@ -6,6 +6,8 @@ import dev.emi.emi.bom.BoM;
 import dev.emi.emi.bom.MaterialNode;
 import dev.emi.emi.bom.MaterialTree;
 import dev.emi.emi.bom.ProgressState;
+import fr.syuko.emicreatecompat.Config;
+import fr.syuko.emicreatecompat.TreeVisibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,8 +30,17 @@ public final class RecipeTreeResources {
     }
 
     public static Set<Item> neededTreeItems() {
+        if (!Config.enabled) {
+            return Set.of();
+        }
+
         MaterialTree tree = BoM.tree;
         if (tree == null || tree.goal == null) {
+            return Set.of();
+        }
+
+        // Respect the visibility setting: optionally require EMI's recipe-tree (crafting) view.
+        if (Config.treeVisibility == TreeVisibility.CRAFTING_MODE_ONLY && !BoM.craftingMode) {
             return Set.of();
         }
 
