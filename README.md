@@ -12,7 +12,7 @@ Create for EMI improves the compatibility between [EMI](https://github.com/emily
 [Create](https://github.com/Creators-of-Create/Create), and adds new features on top of the two mods so they work as one
 coherent tool instead of two side-by-side ones.
 
-> **Client-side only.** The mod does nothing on the server — install it on your client, and it will work on any world or
+> **Client-side only.** The mod does nothing on the server - install it on your client, and it will work on any world or
 > server running Create and EMI.
 
 ## Features
@@ -20,13 +20,13 @@ coherent tool instead of two side-by-side ones.
 ### Stock Keeper
 
 <details>
-<summary><b>EMI recipe tree category</b> — see what your network already stocks</summary>
+<summary><b>EMI recipe tree category</b> - see what your network already stocks</summary>
 
 When an EMI recipe tree is active, a category is added at the top of Create's Stock Keeper listing the stocked items
 that match the tree's missing ingredients. Branches you have already completed are filtered out, so only what you still
 need shows up.
 
-Items already queued in the order basket count as owned, so the recipe tree recalculates while you compose your order —
+Items already queued in the order basket count as owned, so the recipe tree recalculates while you compose your order -
 no need to send it first to see what is left to gather.
 
 <!-- TODO: screenshot -->
