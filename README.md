@@ -2,9 +2,7 @@
 
 **Better integration between EMI and Create — plus a few extras.**
 
-<!-- TODO: banner -->
-
-[![CurseForge](https://img.shields.io/curseforge/dt/1625163?logo=curseforge&label=&suffix=%20&style=flat&color=242629&labelColor=F16436&logoColor=1C1C1C)](https://www.curseforge.com/minecraft/mc-mods/create-for-emi)
+[![CurseForge](https://img.shields.io/curseforge/dt/1625163?logo=curseforge&label=Curseforge&suffix=%20&style=flat&color=242629&labelColor=F16436&logoColor=1C1C1C)](https://www.curseforge.com/minecraft/mc-mods/create-for-emi)
 
 ## About
 
@@ -29,7 +27,7 @@ need shows up.
 Items already queued in the order basket count as owned, so the recipe tree recalculates while you compose your order -
 no need to send it first to see what is left to gather.
 
-<!-- TODO: screenshot -->
+<img width="1242" height="1090" alt="java_DdDqmM7bj6" src="https://github.com/user-attachments/assets/fd2ab54d-e61d-4aee-8b6c-323bafdf620f" />
 
 </details>
 
