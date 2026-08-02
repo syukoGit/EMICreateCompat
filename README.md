@@ -73,7 +73,7 @@ Issues and pull requests are welcome.
 
 The code is organized by **integration boundary**, not by technical layer: `emi/` and `create/` are thin adapters around
 each third-party API, and they only meet inside a mixin. Mixins hold no business logic. Please keep that structure when
-adding features — see [CLAUDE.md](CLAUDE.md) for the full guidelines.
+adding features - see [CLAUDE.md](CLAUDE.md) for the full guidelines.
 
 ## License
 
