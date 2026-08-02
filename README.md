@@ -22,9 +22,9 @@ coherent tool instead of two side-by-side ones.
 <details>
 <summary><b>EMI recipe tree category</b> — see what your network already stocks</summary>
 
-When an EMI recipe tree is active, a category is added at the top of Create's Stock Keeper listing the stocked items that
-match the tree's missing ingredients. Branches you have already completed are filtered out, so only what you still need
-shows up.
+When an EMI recipe tree is active, a category is added at the top of Create's Stock Keeper listing the stocked items
+that match the tree's missing ingredients. Branches you have already completed are filtered out, so only what you still
+need shows up.
 
 Items already queued in the order basket count as owned, so the recipe tree recalculates while you compose your order —
 no need to send it first to see what is left to gather.
