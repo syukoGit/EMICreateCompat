@@ -62,17 +62,20 @@ Base package `fr.syuko.emicreatecompat` (group `fr.syuko`). Sub-packages:
 - **`mixin/`** — thin adapters only. A mixin captures a hook, gathers screen state, delegates to `emi`/`create`, and
   writes the result back. It holds **no business logic**. Register new classes in the `client` array of [
   `emicreatecompat.mixins.json`](src/main/resources/emicreatecompat.mixins.json).
-- **`plugin/`** — the EMI plugin registry, two files only: [
+- **`plugin/`** — the EMI plugin registry, three files only: [
   `CreateEmiPlugin`](src/main/java/fr/syuko/emicreatecompat/plugin/CreateEmiPlugin.java) (`@EmiEntrypoint`, discovered
-  by EMI itself — no `neoforge.mods.toml` entry) and `CreateEmiCategories`. Whether recipes are registered at all is
-  driven by `Config.recipeRegistration`: `AUTO` (default) skips registration when `jei` is loaded, because EMI already
-  bridges Create's JEI plugin and the recipes would be duplicated.
+  by EMI itself — no `neoforge.mods.toml` entry), `CreateEmiCategories` and the `RegisteredCategory` record.
+  `register()` holds **one generic loop** over `categories()`: keep it free of per-category branching, and never
+  dispatch on recipe classes there. Whether recipes are registered at all is driven by `Config.recipeRegistration`:
+  `AUTO` (default) skips registration when `jei` is loaded, because EMI already bridges Create's JEI plugin and the
+  recipes would be duplicated.
 
 **Adding a category** = a new `category/xxx/` package with its four files, one constant in `CreateEmiCategories`, and
-one loop in `CreateEmiPlugin`. Reuse Create's own ids and lang keys (`create:pressing`, `create.recipe.pressing`) by
-overriding `EmiRecipeCategory#getName()`. Coordinates copied from Create's JEI category must be **shifted by -1 on both
-axes**: JEI places a 16x16 ingredient with a background at `-1,-1`, EMI's `SlotWidget` is 18x18 placed by its corner.
-Every output slot needs `.recipeContext(this)` or the recipe never resolves in EMI's tree.
+one `RegisteredCategory` entry in `CreateEmiPlugin.categories()` (category, workstations, and a
+`RecipeManager -> recipes` function). Reuse Create's own ids and lang keys (`create:pressing`, `create.recipe.pressing`)
+by overriding `EmiRecipeCategory#getName()`. Coordinates copied from Create's JEI category must be **shifted by -1 on
+both axes**: JEI places a 16x16 ingredient with a background at `-1,-1`, EMI's `SlotWidget` is 18x18 placed by its
+corner. Every output slot needs `.recipeContext(this)` or the recipe never resolves in EMI's tree.
 
 **Dependency rule:** `emi/` and `create/` do not know about each other. They meet in `mixin/` (UI injection) and in
 `category/` (the EMI plugin). Inside a `category/xxx/` package the boundary is kept by naming, and it is greppable —
