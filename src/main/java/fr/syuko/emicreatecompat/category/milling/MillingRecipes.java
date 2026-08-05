@@ -1,7 +1,7 @@
-package fr.syuko.emicreatecompat.category.pressing;
+package fr.syuko.emicreatecompat.category.milling;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.kinetics.press.PressingRecipe;
+import com.simibubi.create.content.kinetics.crusher.AbstractCrushingRecipe;
 import fr.syuko.emicreatecompat.create.recipe.ChancedStack;
 import fr.syuko.emicreatecompat.create.recipe.ProcessingOutputs;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -11,17 +11,17 @@ import net.minecraft.world.item.crafting.RecipeType;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PressingRecipes {
+public final class MillingRecipes {
 
-    private PressingRecipes() {
+    private MillingRecipes() {
     }
 
-    public static List<PressingDisplay> all(RecipeManager manager) {
-        RecipeType<PressingRecipe> pressing = AllRecipeTypes.PRESSING.getType();
-        List<PressingDisplay> displays = new ArrayList<>();
+    public static List<MillingDisplay> all(RecipeManager manager) {
+        RecipeType<AbstractCrushingRecipe> milling = AllRecipeTypes.MILLING.getType();
+        List<MillingDisplay> displays = new ArrayList<>();
 
-        for (RecipeHolder<PressingRecipe> holder : manager.getAllRecipesFor(pressing)) {
-            PressingRecipe recipe = holder.value();
+        for (RecipeHolder<AbstractCrushingRecipe> holder : manager.getAllRecipesFor(milling)) {
+            AbstractCrushingRecipe recipe = holder.value();
             if (recipe.getIngredients().isEmpty()) {
                 continue;
             }
@@ -31,7 +31,7 @@ public final class PressingRecipes {
                 continue;
             }
 
-            displays.add(new PressingDisplay(holder.id(), recipe.getIngredients().getFirst(), outputs));
+            displays.add(new MillingDisplay(holder.id(), recipe.getIngredients().getFirst(), outputs));
         }
 
         return displays;

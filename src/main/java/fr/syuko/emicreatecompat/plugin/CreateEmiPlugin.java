@@ -9,11 +9,24 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import fr.syuko.emicreatecompat.category.conversion.ConversionEmiRecipe;
 import fr.syuko.emicreatecompat.category.conversion.ConversionRecipes;
+import fr.syuko.emicreatecompat.category.fanhaunting.FanHauntingEmiRecipe;
+import fr.syuko.emicreatecompat.category.fanhaunting.FanHauntingRecipes;
+import fr.syuko.emicreatecompat.category.fansmoking.FanSmokingEmiRecipe;
+import fr.syuko.emicreatecompat.category.fansmoking.FanSmokingRecipes;
+import fr.syuko.emicreatecompat.category.fanwashing.FanWashingEmiRecipe;
+import fr.syuko.emicreatecompat.category.fanwashing.FanWashingRecipes;
+import fr.syuko.emicreatecompat.category.itemapplication.ItemApplicationEmiRecipe;
+import fr.syuko.emicreatecompat.category.itemapplication.ItemApplicationRecipes;
+import fr.syuko.emicreatecompat.category.milling.MillingEmiRecipe;
+import fr.syuko.emicreatecompat.category.milling.MillingRecipes;
 import fr.syuko.emicreatecompat.category.polishing.PolishingEmiRecipe;
 import fr.syuko.emicreatecompat.category.polishing.PolishingRecipes;
 import fr.syuko.emicreatecompat.category.pressing.PressingEmiRecipe;
 import fr.syuko.emicreatecompat.category.pressing.PressingRecipes;
+import fr.syuko.emicreatecompat.category.sawing.SawingEmiRecipe;
+import fr.syuko.emicreatecompat.category.sawing.SawingRecipes;
 import fr.syuko.emicreatecompat.config.Config;
+import fr.syuko.emicreatecompat.create.recipe.EncasedFan;
 import net.neoforged.fml.ModList;
 
 import java.util.List;
@@ -51,7 +64,49 @@ public class CreateEmiPlugin implements EmiPlugin {
                                               manager -> ConversionRecipes.all()
                                                                           .stream()
                                                                           .map(ConversionEmiRecipe::new)
-                                                                          .toList()));
+                                                                          .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.MILLING,
+                                              List.of(EmiStack.of(AllBlocks.MILLSTONE.get())),
+                                              manager -> MillingRecipes.all(manager)
+                                                                       .stream()
+                                                                       .map(MillingEmiRecipe::new)
+                                                                       .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.SAWING,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_SAW.get())),
+                                              manager -> SawingRecipes.all(manager)
+                                                                      .stream()
+                                                                      .map(SawingEmiRecipe::new)
+                                                                      .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.ITEM_APPLICATION,
+                                              List.of(),
+                                              manager -> ItemApplicationRecipes.all(manager)
+                                                                               .stream()
+                                                                               .map(ItemApplicationEmiRecipe::new)
+                                                                               .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.FAN_WASHING,
+                                              List.of(EmiStack.of(EncasedFan.labelled("fan_washing"))),
+                                              manager -> FanWashingRecipes.all(manager)
+                                                                          .stream()
+                                                                          .map(FanWashingEmiRecipe::new)
+                                                                          .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.FAN_SMOKING,
+                                              List.of(EmiStack.of(EncasedFan.labelled("fan_smoking"))),
+                                              manager -> FanSmokingRecipes.all(manager)
+                                                                          .stream()
+                                                                          .map(FanSmokingEmiRecipe::new)
+                                                                          .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.FAN_HAUNTING,
+                                              List.of(EmiStack.of(EncasedFan.labelled("fan_haunting"))),
+                                              manager -> FanHauntingRecipes.all(manager)
+                                                                           .stream()
+                                                                           .map(FanHauntingEmiRecipe::new)
+                                                                           .toList()));
     }
 
     @Override
