@@ -116,6 +116,12 @@ public final class CreateEmiCategories {
                            AllBlocks.MECHANICAL_PRESS.get(),
                            Items.CRAFTING_TABLE);
 
+    public static final EmiRecipeCategory
+            SEQUENCED_ASSEMBLY =
+            createCategory("sequenced_assembly",
+                           "create.recipe.sequenced_assembly",
+                           EmiStack.of(AllItems.PRECISION_MECHANISM.get()));
+
     private CreateEmiCategories() {
     }
 

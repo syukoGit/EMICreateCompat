@@ -21,6 +21,10 @@ public final class PressRender {
     }
 
     public static void draw(GuiGraphics graphics, int x, int y, boolean withBasin) {
+        draw(graphics, x, y, withBasin, 0);
+    }
+
+    public static void draw(GuiGraphics graphics, int x, int y, boolean withBasin, int offset) {
         int
                 scale =
                 withBasin
@@ -46,7 +50,7 @@ public final class PressRender {
 
         GuiGameElement.of(AllPartialModels.MECHANICAL_PRESS_HEAD)
                       .lighting(KineticsRender.LIGHTING)
-                      .atLocal(0, -headOffset(), 0)
+                      .atLocal(0, -headOffset(offset), 0)
                       .scale(scale)
                       .render(graphics);
 
@@ -61,8 +65,8 @@ public final class PressRender {
         pose.popPose();
     }
 
-    private static float headOffset() {
-        float cycle = AnimationTickHolder.getRenderTime() % HEAD_CYCLE_TICKS;
+    private static float headOffset(int offset) {
+        float cycle = (AnimationTickHolder.getRenderTime() - offset * 8f) % HEAD_CYCLE_TICKS;
         if (cycle < 10) {
             float progress = cycle / 10;
             return -(progress * progress * progress);

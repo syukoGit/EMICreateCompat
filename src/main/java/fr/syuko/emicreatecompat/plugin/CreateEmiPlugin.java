@@ -45,6 +45,8 @@ import fr.syuko.emicreatecompat.category.pressing.PressingEmiRecipe;
 import fr.syuko.emicreatecompat.category.pressing.PressingRecipes;
 import fr.syuko.emicreatecompat.category.sawing.SawingEmiRecipe;
 import fr.syuko.emicreatecompat.category.sawing.SawingRecipes;
+import fr.syuko.emicreatecompat.category.sequencedassembly.SequencedAssemblyEmiRecipe;
+import fr.syuko.emicreatecompat.category.sequencedassembly.SequencedAssemblyRecipes;
 import fr.syuko.emicreatecompat.config.Config;
 import fr.syuko.emicreatecompat.create.recipe.EncasedFan;
 import net.neoforged.fml.ModList;
@@ -203,7 +205,14 @@ public class CreateEmiPlugin implements EmiPlugin {
                                               manager -> AutomaticPackingRecipes.all(manager)
                                                                                 .stream()
                                                                                 .map(AutomaticPackingEmiRecipe::new)
-                                                                                .toList()));
+                                                                                .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.SEQUENCED_ASSEMBLY,
+                                              List.of(),
+                                              manager -> SequencedAssemblyRecipes.all(manager)
+                                                                                 .stream()
+                                                                                 .map(SequencedAssemblyEmiRecipe::new)
+                                                                                 .toList()));
     }
 
     @Override

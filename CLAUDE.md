@@ -77,6 +77,12 @@ by overriding `EmiRecipeCategory#getName()`. Coordinates copied from Create's JE
 both axes**: JEI places a 16x16 ingredient with a background at `-1,-1`, EMI's `SlotWidget` is 18x18 placed by its
 corner. Every output slot needs `.recipeContext(this)` or the recipe never resolves in EMI's tree.
 
+**Chanced outputs read higher than in JEI, on purpose.** `EmiStack#setChance` makes EMI's bill of materials budget the
+failure rate: `TreeCost` turns a produce chance into `1 / chance` and reports `round(amount / chance)`. A sequenced
+assembly with 5 loops and a ~0.85 output chance therefore asks for 6 of each step ingredient where Create's JEI shows 5.
+This is not an off-by-one — it is the expected cost of one success versus the cost of one attempt. Do not "fix" it by
+dropping the chance.
+
 **Dependency rule:** `emi/` and `create/` do not know about each other. They meet in `mixin/` (UI injection) and in
 `category/` (the EMI plugin). Inside a `category/xxx/` package the boundary is kept by naming, and it is greppable —
 these four commands must all return nothing:
