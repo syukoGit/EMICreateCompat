@@ -59,6 +59,34 @@ public final class CreateEmiCategories {
             FAN_HAUNTING =
             createCategory("fan_haunting", "create.recipe.fan_haunting", AllItems.PROPELLER.get(), Items.SOUL_CAMPFIRE);
 
+    public static final EmiRecipeCategory
+            CRUSHING =
+            createCategory("crushing",
+                           "create.recipe.crushing",
+                           AllBlocks.CRUSHING_WHEEL.get(),
+                           AllItems.CRUSHED_GOLD.get());
+
+    public static final EmiRecipeCategory
+            DEPLOYING =
+            createCategory("deploying", "create.recipe.deploying", EmiStack.of(AllBlocks.DEPLOYER.get()));
+
+    public static final EmiRecipeCategory
+            FAN_BLASTING =
+            createCategory("fan_blasting", "create.recipe.fan_blasting", AllItems.PROPELLER.get(), Items.LAVA_BUCKET);
+
+    public static final EmiRecipeCategory
+            BLOCK_CUTTING =
+            createCategory("block_cutting",
+                           "create.recipe.block_cutting",
+                           AllBlocks.MECHANICAL_SAW.get(),
+                           Items.STONE_BRICK_STAIRS);
+
+    public static final EmiRecipeCategory
+            AUTOMATIC_SHAPED =
+            createCategory("automatic_shaped",
+                           "create.recipe.automatic_shaped",
+                           EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get()));
+
     private CreateEmiCategories() {
     }
 

@@ -7,8 +7,18 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
+import fr.syuko.emicreatecompat.category.automaticshaped.AutomaticShapedEmiRecipe;
+import fr.syuko.emicreatecompat.category.automaticshaped.AutomaticShapedRecipes;
+import fr.syuko.emicreatecompat.category.blockcutting.BlockCuttingEmiRecipe;
+import fr.syuko.emicreatecompat.category.blockcutting.BlockCuttingRecipes;
 import fr.syuko.emicreatecompat.category.conversion.ConversionEmiRecipe;
 import fr.syuko.emicreatecompat.category.conversion.ConversionRecipes;
+import fr.syuko.emicreatecompat.category.crushing.CrushingEmiRecipe;
+import fr.syuko.emicreatecompat.category.crushing.CrushingRecipes;
+import fr.syuko.emicreatecompat.category.deploying.DeployingEmiRecipe;
+import fr.syuko.emicreatecompat.category.deploying.DeployingRecipes;
+import fr.syuko.emicreatecompat.category.fanblasting.FanBlastingEmiRecipe;
+import fr.syuko.emicreatecompat.category.fanblasting.FanBlastingRecipes;
 import fr.syuko.emicreatecompat.category.fanhaunting.FanHauntingEmiRecipe;
 import fr.syuko.emicreatecompat.category.fanhaunting.FanHauntingRecipes;
 import fr.syuko.emicreatecompat.category.fansmoking.FanSmokingEmiRecipe;
@@ -106,7 +116,44 @@ public class CreateEmiPlugin implements EmiPlugin {
                                               manager -> FanHauntingRecipes.all(manager)
                                                                            .stream()
                                                                            .map(FanHauntingEmiRecipe::new)
-                                                                           .toList()));
+                                                                           .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.CRUSHING,
+                                              List.of(EmiStack.of(AllBlocks.CRUSHING_WHEEL.get())),
+                                              manager -> CrushingRecipes.all(manager)
+                                                                        .stream()
+                                                                        .map(CrushingEmiRecipe::new)
+                                                                        .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.DEPLOYING,
+                                              List.of(EmiStack.of(AllBlocks.DEPLOYER.get()),
+                                                      EmiStack.of(AllBlocks.DEPOT.get()),
+                                                      EmiStack.of(AllItems.BELT_CONNECTOR.get())),
+                                              manager -> DeployingRecipes.all(manager)
+                                                                         .stream()
+                                                                         .map(DeployingEmiRecipe::new)
+                                                                         .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.FAN_BLASTING,
+                                              List.of(EmiStack.of(EncasedFan.labelled("fan_blasting"))),
+                                              manager -> FanBlastingRecipes.all(manager)
+                                                                           .stream()
+                                                                           .map(FanBlastingEmiRecipe::new)
+                                                                           .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.BLOCK_CUTTING,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_SAW.get())),
+                                              manager -> BlockCuttingRecipes.all(manager)
+                                                                            .stream()
+                                                                            .map(BlockCuttingEmiRecipe::new)
+                                                                            .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.AUTOMATIC_SHAPED,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get())),
+                                              manager -> AutomaticShapedRecipes.all(manager)
+                                                                               .stream()
+                                                                               .map(AutomaticShapedEmiRecipe::new)
+                                                                               .toList()));
     }
 
     @Override
