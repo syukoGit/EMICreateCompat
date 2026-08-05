@@ -87,6 +87,35 @@ public final class CreateEmiCategories {
                            "create.recipe.automatic_shaped",
                            EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get()));
 
+    public static final EmiRecipeCategory
+            MIXING =
+            createCategory("mixing", "create.recipe.mixing", AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get());
+
+    public static final EmiRecipeCategory
+            AUTOMATIC_SHAPELESS =
+            createCategory("automatic_shapeless",
+                           "create.recipe.automatic_shapeless",
+                           AllBlocks.MECHANICAL_MIXER.get(),
+                           Items.CRAFTING_TABLE);
+
+    public static final EmiRecipeCategory
+            AUTOMATIC_BREWING =
+            createCategory("automatic_brewing",
+                           "create.recipe.automatic_brewing",
+                           AllBlocks.MECHANICAL_MIXER.get(),
+                           Items.BREWING_STAND);
+
+    public static final EmiRecipeCategory
+            PACKING =
+            createCategory("packing", "create.recipe.packing", AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get());
+
+    public static final EmiRecipeCategory
+            AUTOMATIC_PACKING =
+            createCategory("automatic_packing",
+                           "create.recipe.automatic_packing",
+                           AllBlocks.MECHANICAL_PRESS.get(),
+                           Items.CRAFTING_TABLE);
+
     private CreateEmiCategories() {
     }
 

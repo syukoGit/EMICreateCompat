@@ -7,8 +7,14 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
+import fr.syuko.emicreatecompat.category.automaticbrewing.AutomaticBrewingEmiRecipe;
+import fr.syuko.emicreatecompat.category.automaticbrewing.AutomaticBrewingRecipes;
+import fr.syuko.emicreatecompat.category.automaticpacking.AutomaticPackingEmiRecipe;
+import fr.syuko.emicreatecompat.category.automaticpacking.AutomaticPackingRecipes;
 import fr.syuko.emicreatecompat.category.automaticshaped.AutomaticShapedEmiRecipe;
 import fr.syuko.emicreatecompat.category.automaticshaped.AutomaticShapedRecipes;
+import fr.syuko.emicreatecompat.category.automaticshapeless.AutomaticShapelessEmiRecipe;
+import fr.syuko.emicreatecompat.category.automaticshapeless.AutomaticShapelessRecipes;
 import fr.syuko.emicreatecompat.category.blockcutting.BlockCuttingEmiRecipe;
 import fr.syuko.emicreatecompat.category.blockcutting.BlockCuttingRecipes;
 import fr.syuko.emicreatecompat.category.conversion.ConversionEmiRecipe;
@@ -29,6 +35,10 @@ import fr.syuko.emicreatecompat.category.itemapplication.ItemApplicationEmiRecip
 import fr.syuko.emicreatecompat.category.itemapplication.ItemApplicationRecipes;
 import fr.syuko.emicreatecompat.category.milling.MillingEmiRecipe;
 import fr.syuko.emicreatecompat.category.milling.MillingRecipes;
+import fr.syuko.emicreatecompat.category.mixing.MixingEmiRecipe;
+import fr.syuko.emicreatecompat.category.mixing.MixingRecipes;
+import fr.syuko.emicreatecompat.category.packing.PackingEmiRecipe;
+import fr.syuko.emicreatecompat.category.packing.PackingRecipes;
 import fr.syuko.emicreatecompat.category.polishing.PolishingEmiRecipe;
 import fr.syuko.emicreatecompat.category.polishing.PolishingRecipes;
 import fr.syuko.emicreatecompat.category.pressing.PressingEmiRecipe;
@@ -153,7 +163,47 @@ public class CreateEmiPlugin implements EmiPlugin {
                                               manager -> AutomaticShapedRecipes.all(manager)
                                                                                .stream()
                                                                                .map(AutomaticShapedEmiRecipe::new)
-                                                                               .toList()));
+                                                                               .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.MIXING,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_MIXER.get()),
+                                                      EmiStack.of(AllBlocks.BASIN.get())),
+                                              manager -> MixingRecipes.all(manager)
+                                                                      .stream()
+                                                                      .map(MixingEmiRecipe::new)
+                                                                      .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.AUTOMATIC_SHAPELESS,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_MIXER.get()),
+                                                      EmiStack.of(AllBlocks.BASIN.get())),
+                                              manager -> AutomaticShapelessRecipes.all(manager)
+                                                                                  .stream()
+                                                                                  .map(AutomaticShapelessEmiRecipe::new)
+                                                                                  .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.AUTOMATIC_BREWING,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_MIXER.get()),
+                                                      EmiStack.of(AllBlocks.BASIN.get())),
+                                              manager -> AutomaticBrewingRecipes.all()
+                                                                                .stream()
+                                                                                .map(AutomaticBrewingEmiRecipe::new)
+                                                                                .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.PACKING,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_PRESS.get()),
+                                                      EmiStack.of(AllBlocks.BASIN.get())),
+                                              manager -> PackingRecipes.all(manager)
+                                                                       .stream()
+                                                                       .map(PackingEmiRecipe::new)
+                                                                       .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.AUTOMATIC_PACKING,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_PRESS.get()),
+                                                      EmiStack.of(AllBlocks.BASIN.get())),
+                                              manager -> AutomaticPackingRecipes.all(manager)
+                                                                                .stream()
+                                                                                .map(AutomaticPackingEmiRecipe::new)
+                                                                                .toList()));
     }
 
     @Override
