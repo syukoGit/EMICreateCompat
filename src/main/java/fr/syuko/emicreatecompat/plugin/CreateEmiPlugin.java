@@ -23,6 +23,8 @@ import fr.syuko.emicreatecompat.category.crushing.CrushingEmiRecipe;
 import fr.syuko.emicreatecompat.category.crushing.CrushingRecipes;
 import fr.syuko.emicreatecompat.category.deploying.DeployingEmiRecipe;
 import fr.syuko.emicreatecompat.category.deploying.DeployingRecipes;
+import fr.syuko.emicreatecompat.category.draining.DrainingEmiRecipe;
+import fr.syuko.emicreatecompat.category.draining.DrainingRecipes;
 import fr.syuko.emicreatecompat.category.fanblasting.FanBlastingEmiRecipe;
 import fr.syuko.emicreatecompat.category.fanblasting.FanBlastingRecipes;
 import fr.syuko.emicreatecompat.category.fanhaunting.FanHauntingEmiRecipe;
@@ -33,6 +35,8 @@ import fr.syuko.emicreatecompat.category.fanwashing.FanWashingEmiRecipe;
 import fr.syuko.emicreatecompat.category.fanwashing.FanWashingRecipes;
 import fr.syuko.emicreatecompat.category.itemapplication.ItemApplicationEmiRecipe;
 import fr.syuko.emicreatecompat.category.itemapplication.ItemApplicationRecipes;
+import fr.syuko.emicreatecompat.category.mechanicalcrafting.MechanicalCraftingEmiRecipe;
+import fr.syuko.emicreatecompat.category.mechanicalcrafting.MechanicalCraftingRecipes;
 import fr.syuko.emicreatecompat.category.milling.MillingEmiRecipe;
 import fr.syuko.emicreatecompat.category.milling.MillingRecipes;
 import fr.syuko.emicreatecompat.category.mixing.MixingEmiRecipe;
@@ -47,6 +51,8 @@ import fr.syuko.emicreatecompat.category.sawing.SawingEmiRecipe;
 import fr.syuko.emicreatecompat.category.sawing.SawingRecipes;
 import fr.syuko.emicreatecompat.category.sequencedassembly.SequencedAssemblyEmiRecipe;
 import fr.syuko.emicreatecompat.category.sequencedassembly.SequencedAssemblyRecipes;
+import fr.syuko.emicreatecompat.category.spoutfilling.SpoutFillingEmiRecipe;
+import fr.syuko.emicreatecompat.category.spoutfilling.SpoutFillingRecipes;
 import fr.syuko.emicreatecompat.config.Config;
 import fr.syuko.emicreatecompat.create.recipe.EncasedFan;
 import net.neoforged.fml.ModList;
@@ -212,7 +218,28 @@ public class CreateEmiPlugin implements EmiPlugin {
                                               manager -> SequencedAssemblyRecipes.all(manager)
                                                                                  .stream()
                                                                                  .map(SequencedAssemblyEmiRecipe::new)
-                                                                                 .toList()));
+                                                                                 .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.SPOUT_FILLING,
+                                              List.of(EmiStack.of(AllBlocks.SPOUT.get())),
+                                              manager -> SpoutFillingRecipes.all(manager)
+                                                                            .stream()
+                                                                            .map(SpoutFillingEmiRecipe::new)
+                                                                            .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.DRAINING,
+                                              List.of(EmiStack.of(AllBlocks.ITEM_DRAIN.get())),
+                                              manager -> DrainingRecipes.all(manager)
+                                                                        .stream()
+                                                                        .map(DrainingEmiRecipe::new)
+                                                                        .toList()),
+
+                       new RegisteredCategory(CreateEmiCategories.MECHANICAL_CRAFTING,
+                                              List.of(EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get())),
+                                              manager -> MechanicalCraftingRecipes.all(manager)
+                                                                                  .stream()
+                                                                                  .map(MechanicalCraftingEmiRecipe::new)
+                                                                                  .toList()));
     }
 
     @Override

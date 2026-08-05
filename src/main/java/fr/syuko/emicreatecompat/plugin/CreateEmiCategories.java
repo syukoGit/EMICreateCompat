@@ -122,6 +122,20 @@ public final class CreateEmiCategories {
                            "create.recipe.sequenced_assembly",
                            EmiStack.of(AllItems.PRECISION_MECHANISM.get()));
 
+    public static final EmiRecipeCategory
+            SPOUT_FILLING =
+            createCategory("spout_filling", "create.recipe.spout_filling", AllBlocks.SPOUT.get(), Items.WATER_BUCKET);
+
+    public static final EmiRecipeCategory
+            DRAINING =
+            createCategory("draining", "create.recipe.draining", AllBlocks.ITEM_DRAIN.get(), Items.WATER_BUCKET);
+
+    public static final EmiRecipeCategory
+            MECHANICAL_CRAFTING =
+            createCategory("mechanical_crafting",
+                           "create.recipe.mechanical_crafting",
+                           EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get()));
+
     private CreateEmiCategories() {
     }
 
