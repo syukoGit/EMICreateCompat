@@ -1,6 +1,6 @@
 {
   "gui.emicreatecompat.stock_keeper.recipe_tree": "EMI Recipe Tree",
-  "tooltip.emicreatecompat.expected_cost": "Expected cost: ≈%s",
+  "tooltip.emicreatecompat.expected_mode_cost": "Cost in expected mode: ≈%s",
   "tooltip.emicreatecompat.chance_mode.expected": "Chance amounts: expected",
   "tooltip.emicreatecompat.chance_mode.expected.description": "Chanced steps show the average cost of one success.",
   "tooltip.emicreatecompat.chance_mode.raw": "Chance amounts: raw",

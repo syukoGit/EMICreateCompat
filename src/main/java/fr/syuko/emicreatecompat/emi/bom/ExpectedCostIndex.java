@@ -6,9 +6,7 @@ import dev.emi.emi.bom.ChanceMaterialCost;
 import dev.emi.emi.bom.FlatMaterialCost;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public final class ExpectedCostIndex {
 
@@ -38,20 +36,23 @@ public final class ExpectedCostIndex {
     }
 
     private static void index() {
-        Map<EmiIngredient, Long> totals = new HashMap<>();
-        Set<EmiIngredient> chanced = new HashSet<>();
+        Map<EmiIngredient, Long> rawTotals = new HashMap<>();
+        Map<EmiIngredient, Long> expectedTotals = new HashMap<>();
 
         for (FlatMaterialCost cost : BoM.tree.cost.costs.values()) {
-            totals.merge(cost.ingredient, cost.getEffectiveAmount(), Long::sum);
+            rawTotals.merge(cost.ingredient, cost.amount, Long::sum);
+            expectedTotals.merge(cost.ingredient, cost.amount, Long::sum);
         }
 
         for (ChanceMaterialCost cost : BoM.tree.cost.chanceCosts.values()) {
-            totals.merge(cost.ingredient, cost.getEffectiveAmount(), Long::sum);
-            chanced.add(cost.ingredient);
+            rawTotals.merge(cost.ingredient, cost.amount, Long::sum);
+            expectedTotals.merge(cost.ingredient, cost.getEffectiveAmount(), Long::sum);
         }
 
-        for (EmiIngredient ingredient : chanced) {
-            EXPECTED_BY_INGREDIENT.put(ingredient, totals.get(ingredient));
+        for (Map.Entry<EmiIngredient, Long> entry : expectedTotals.entrySet()) {
+            if (!entry.getValue().equals(rawTotals.get(entry.getKey()))) {
+                EXPECTED_BY_INGREDIENT.put(entry.getKey(), entry.getValue());
+            }
         }
     }
 }

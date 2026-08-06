@@ -24,7 +24,7 @@ public final class ExpectedCostTooltip {
         }
 
         components.add(ClientTooltipComponent.create(EmiPort.ordered(Component.translatable(
-                "tooltip.emicreatecompat.expected_cost",
+                "tooltip.emicreatecompat.expected_mode_cost",
                 expected).withStyle(ChatFormatting.GOLD))));
     }
 }

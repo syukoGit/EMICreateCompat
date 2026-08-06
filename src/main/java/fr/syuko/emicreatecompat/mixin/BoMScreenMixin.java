@@ -2,15 +2,19 @@ package fr.syuko.emicreatecompat.mixin;
 
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.bom.BoM;
+import dev.emi.emi.bom.ChanceState;
+import dev.emi.emi.bom.MaterialNode;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.BoMScreen;
 import fr.syuko.emicreatecompat.emi.bom.ChanceModeButton;
+import fr.syuko.emicreatecompat.emi.bom.ChancedProduction;
 import fr.syuko.emicreatecompat.emi.bom.ExpectedCostIndex;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -19,6 +23,17 @@ public abstract class BoMScreenMixin {
 
     @Shadow
     public abstract void recalculateTree();
+
+    @Redirect(method = "addNewNodes", at = @At(value = "INVOKE", target = "Ldev/emi/emi/bom/ChanceState;produce(F)Ldev/emi/emi/bom/ChanceState;"))
+    private ChanceState emicreatecompat$snapAttempts(ChanceState chance,
+                                                     float produceChance,
+                                                     MaterialNode node,
+                                                     long multiplier,
+                                                     long divisor,
+                                                     int depth,
+                                                     ChanceState incoming) {
+        return ChancedProduction.snappedToWholeAttempts(chance, produceChance, node, multiplier);
+    }
 
     @Inject(method = "recalculateTree", at = @At("HEAD"))
     private void emicreatecompat$measureExpectedCosts(CallbackInfo ci) {
