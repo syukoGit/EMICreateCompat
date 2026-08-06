@@ -62,9 +62,11 @@ Base package `fr.syuko.emicreatecompat` (group `fr.syuko`). Sub-packages:
 - **`mixin/`** — thin adapters only. A mixin captures a hook, gathers screen state, delegates to `emi`/`create`, and
   writes the result back. It holds **no business logic**. Register new classes in the `client` array of [
   `emicreatecompat.mixins.json`](src/main/resources/emicreatecompat.mixins.json).
-- **`plugin/`** — the EMI plugin registry, three files only: [
+- **`plugin/`** — the EMI plugin registry: [
   `CreateEmiPlugin`](src/main/java/fr/syuko/emicreatecompat/plugin/CreateEmiPlugin.java) (`@EmiEntrypoint`, discovered
-  by EMI itself — no `neoforge.mods.toml` entry), `CreateEmiCategories` and the `RegisteredCategory` record.
+  by EMI itself — no `neoforge.mods.toml` entry), `CreateEmiCategories`, the `RegisteredCategory` record, and the
+  package-private icon renderables `CreateEmiCategories` builds its category icons from (`DoubleItemIcon`). Nothing else
+  belongs here.
   `register()` holds **one generic loop** over `categories()`: keep it free of per-category branching, and never
   dispatch on recipe classes there. Whether recipes are registered at all is driven by `Config.recipeRegistration`:
   `AUTO` (default) skips registration when `jei` is loaded, because EMI already bridges Create's JEI plugin and the
