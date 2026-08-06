@@ -10,6 +10,7 @@
     "BoMScreenMixin",
     "BoMScreenNodeMixin",
     "CategoryEntryAccessor",
+    "ChanceMaterialCostMixin",
     "ChanceStateMixin",
     "EmiFavoritesMixin",
     "MaterialNodeMixin",

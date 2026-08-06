@@ -13,6 +13,6 @@ public final class ChancedFavorites {
             return node.totalNeeded;
         }
 
-        return ExpectedAmounts.scaled(node.totalNeeded, ((ChancedNode) node).emicreatecompat$chanceMultiplier());
+        return ChancedCosts.favoriteAmount(node);
     }
 }
