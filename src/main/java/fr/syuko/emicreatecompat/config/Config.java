@@ -50,6 +50,15 @@ public final class Config {
                             "Applies to every mod's chanced recipes, not only Create's.")
                    .defineEnum("chanceAmounts", ChanceAmounts.EXPECTED);
 
+    private static final ModConfigSpec.BooleanValue
+            ALIGN_CHANCED_FAVORITES =
+            BUILDER.comment("Make the synthetic favorites of a chanced recipe show the same amount as the",
+                            "recipe tree does. EMI counts them from the raw amount while the tree displays",
+                            "the chanced one, so a step reading 6 in the tree shows 5 in the favorites bar",
+                            "and only drops once two items have been gathered.",
+                            "Applies to every mod's chanced recipes, not only Create's.")
+                   .define("alignChancedFavorites", true);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;
@@ -61,6 +70,8 @@ public final class Config {
     public static RecipeRegistration recipeRegistration = RecipeRegistration.AUTO;
 
     public static ChanceAmounts chanceAmounts = ChanceAmounts.EXPECTED;
+
+    public static boolean alignChancedFavorites = true;
 
     private Config() {
     }
@@ -75,5 +86,6 @@ public final class Config {
         countPendingOrder = COUNT_PENDING_ORDER.get();
         recipeRegistration = RECIPE_REGISTRATION.get();
         chanceAmounts = CHANCE_AMOUNTS.get();
+        alignChancedFavorites = ALIGN_CHANCED_FAVORITES.get();
     }
 }

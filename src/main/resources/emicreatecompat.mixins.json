@@ -11,7 +11,10 @@
     "BoMScreenNodeMixin",
     "CategoryEntryAccessor",
     "ChanceStateMixin",
-    "StockKeeperRequestScreenMixin"
+    "EmiFavoritesMixin",
+    "MaterialNodeMixin",
+    "StockKeeperRequestScreenMixin",
+    "TreeCostMixin"
   ],
   "injectors": {
     "defaultRequire": 1
