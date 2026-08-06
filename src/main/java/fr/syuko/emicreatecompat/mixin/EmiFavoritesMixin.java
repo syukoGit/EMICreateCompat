@@ -11,10 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = EmiFavorites.class, remap = false)
 public abstract class EmiFavoritesMixin {
 
-    @Redirect(method = "countRecipes",
-              at = @At(value = "FIELD",
-                       target = "Ldev/emi/emi/bom/MaterialNode;totalNeeded:J",
-                       opcode = Opcodes.GETFIELD))
+    @Redirect(method = "countRecipes", at = @At(value = "FIELD", target = "Ldev/emi/emi/bom/MaterialNode;totalNeeded:J", opcode = Opcodes.GETFIELD))
     private static long emicreatecompat$alignNeededWithTree(MaterialNode node) {
         return ChancedFavorites.neededFor(node);
     }

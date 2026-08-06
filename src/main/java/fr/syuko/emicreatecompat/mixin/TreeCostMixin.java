@@ -13,17 +13,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = TreeCost.class, remap = false)
 public abstract class TreeCostMixin {
 
-    @Inject(method = "calculateCost",
-            at = @At(value = "FIELD",
-                     target = "Ldev/emi/emi/bom/MaterialNode;neededBatches:J",
-                     opcode = Opcodes.PUTFIELD,
-                     ordinal = 1,
-                     shift = At.Shift.AFTER))
+    @Inject(method = "calculateCost", at = @At(value = "FIELD", target = "Ldev/emi/emi/bom/MaterialNode;neededBatches:J", opcode = Opcodes.PUTFIELD, ordinal = 1, shift = At.Shift.AFTER))
     private void emicreatecompat$recordChanceMultiplier(MaterialNode node,
                                                         long amount,
                                                         ChanceState chance,
                                                         boolean trackProgress,
                                                         CallbackInfo ci) {
-        ((ChancedNode) node).emicreatecompat$setChanceMultiplier(chance.chanced() ? chance.chance() : 1f);
+        ((ChancedNode) node).emicreatecompat$setChanceMultiplier(chance.chanced()
+                                                                 ? chance.chance()
+                                                                 : 1f);
     }
 }

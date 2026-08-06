@@ -151,3 +151,12 @@ already compilable without a new dependency: its classes are bundled inside the 
   reference them via `Component.translatable(...)`.
 - The mod is client-only: gate any code touching rendering/screens behind client dist checks
   (`@EventBusSubscriber(value = Dist.CLIENT)` or equivalent).
+
+## Git
+
+- **Never run `git commit` without an explicit go for that specific commit.** Editing files, staging them and proposing
+  a message is fine; creating the commit is not. An instruction to "do the changes for commit N" is **not** permission
+  to commit them, and permission for one commit never carries over to the next.
+- The same rule covers every history rewrite (`reset`, `commit --amend`, `rebase`, `cherry-pick`) and `git push`.
+- Commit messages are a **single Conventional Commits line** — no body, no `Co-Authored-By` trailer. Match the existing
+  history: `feat: add spout filling, draining and mechanical crafting recipe support with EMI integration`.

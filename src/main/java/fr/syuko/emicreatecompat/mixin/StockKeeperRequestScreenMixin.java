@@ -50,7 +50,11 @@ public abstract class StockKeeperRequestScreenMixin {
             return;
         }
 
-        List<ItemStack> pendingOrder = Config.countPendingOrder ? PendingOrder.stacks(itemsToOrder) : List.of();
+        List<ItemStack>
+                pendingOrder =
+                Config.countPendingOrder
+                ? PendingOrder.stacks(itemsToOrder)
+                : List.of();
 
         Set<Item> needed = EmiRecipeTreeReader.neededTreeItems(pendingOrder);
         List<BigItemStack> matches = StockMatcher.match(needed, currentItemSource);
@@ -59,7 +63,8 @@ public abstract class StockKeeperRequestScreenMixin {
         }
 
         String title = Component.translatable("gui.emicreatecompat.stock_keeper.recipe_tree").getString();
-        StockCategoryInjector.Result result =
+        StockCategoryInjector.Result
+                result =
                 StockCategoryInjector.prepend(title, matches, categories, displayedItems, rowHeight, cols);
         categories = result.categories();
         displayedItems = result.displayedItems();

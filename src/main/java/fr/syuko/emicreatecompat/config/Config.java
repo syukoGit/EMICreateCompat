@@ -10,6 +10,8 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public final class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
+    public static final ModConfigSpec SPEC = BUILDER.build();
+
     private static final ModConfigSpec.BooleanValue
             ENABLED =
             BUILDER.comment("Master switch: show the recipe-tree category at the top of Create's Stock Keeper.")
@@ -58,8 +60,6 @@ public final class Config {
                             "and only drops once two items have been gathered.",
                             "Applies to every mod's chanced recipes, not only Create's.")
                    .define("alignChancedFavorites", true);
-
-    public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;
 
