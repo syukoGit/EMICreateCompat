@@ -43,11 +43,18 @@ Base package `fr.syuko.emicreatecompat` (group `fr.syuko`). Sub-packages:
 - **(root)** — [`Emicreatecompat.java`](src/main/java/fr/syuko/emicreatecompat/Emicreatecompat.java), the `@Mod`
   entrypoint. `MODID = "emicreatecompat"`; constructor takes `ModContainer` and registers the config spec.
 - **`config/`** — [`Config`](src/main/java/fr/syuko/emicreatecompat/config/Config.java) (client `ModConfigSpec` +
-  mirrored static fields) and [`TreeVisibility`](src/main/java/fr/syuko/emicreatecompat/config/TreeVisibility.java). In
-  `Config`, `SPEC = BUILDER.build()` **must stay after every `define(...)` call** or the option is silently dropped from
-  the spec.
+  mirrored static fields) and the option enums it defines ([
+  `TreeVisibility`](src/main/java/fr/syuko/emicreatecompat/config/TreeVisibility.java), `RecipeRegistration`, [
+  `ChanceAmounts`](src/main/java/fr/syuko/emicreatecompat/config/ChanceAmounts.java)). In `Config`,
+  `SPEC = BUILDER.build()` **must stay after every `define(...)` call** or the option is silently dropped from the spec.
 - **`emi/`** — [`EmiRecipeTreeReader`](src/main/java/fr/syuko/emicreatecompat/emi/EmiRecipeTreeReader.java): the EMI
   adapter. Reads the active BoM tree and returns a plain `Set<Item>`; nothing outside this package touches `dev.emi.*`.
+  `emi/bom/` holds the bill-of-materials adapter, one responsibility per class: [
+  `BomAmountMode`](src/main/java/fr/syuko/emicreatecompat/emi/bom/BomAmountMode.java) (the single decision point), [
+  `ExpectedCostIndex`](src/main/java/fr/syuko/emicreatecompat/emi/bom/ExpectedCostIndex.java), `ExpectedCostTooltip`,
+  `ChancedFavorites`, the `ChancedNode` duck-type interface, and [
+  `ExpectedAmounts`](src/main/java/fr/syuko/emicreatecompat/emi/bom/ExpectedAmounts.java) — the arithmetic, kept free of
+  any `dev.emi` import so it stays testable on its own.
 - **`create/`** — the Create adapters and the matching logic: [
   `PendingOrder`](src/main/java/fr/syuko/emicreatecompat/create/PendingOrder.java), [
   `StockMatcher`](src/main/java/fr/syuko/emicreatecompat/create/StockMatcher.java) (pure over its inputs), [
@@ -62,6 +69,11 @@ Base package `fr.syuko.emicreatecompat` (group `fr.syuko`). Sub-packages:
 - **`mixin/`** — thin adapters only. A mixin captures a hook, gathers screen state, delegates to `emi`/`create`, and
   writes the result back. It holds **no business logic**. Register new classes in the `client` array of [
   `emicreatecompat.mixins.json`](src/main/resources/emicreatecompat.mixins.json).
+  Seven of them target EMI **internals** rather than its API (`ChanceState`, `TreeCost`, `MaterialNode`, `EmiFavorites`,
+  `BoMScreen` and its private inner `Node` / `Hover`). Those are reached by `targets = "dev.emi.emi...$Node"`, pinned by
+  bytecode ordinal, and declared `remap = false` because the classes are not Minecraft's. Injection points were checked
+  against EMI 1.1.24 with `javap` on the EMI jar; `defaultRequire: 1` turns a moved target into a loud startup failure
+  rather than a silent degradation. **Re-verify them whenever `emi_version` is bumped.**
 - **`plugin/`** — the EMI plugin registry: [
   `CreateEmiPlugin`](src/main/java/fr/syuko/emicreatecompat/plugin/CreateEmiPlugin.java) (`@EmiEntrypoint`, discovered
   by EMI itself — no `neoforge.mods.toml` entry), `CreateEmiCategories`, the `RegisteredCategory` record, and the
@@ -79,11 +91,28 @@ by overriding `EmiRecipeCategory#getName()`. Coordinates copied from Create's JE
 both axes**: JEI places a 16x16 ingredient with a background at `-1,-1`, EMI's `SlotWidget` is 18x18 placed by its
 corner. Every output slot needs `.recipeContext(this)` or the recipe never resolves in EMI's tree.
 
-**Chanced outputs read higher than in JEI, on purpose.** `EmiStack#setChance` makes EMI's bill of materials budget the
-failure rate: `TreeCost` turns a produce chance into `1 / chance` and reports `round(amount / chance)`. A sequenced
-assembly with 5 loops and a ~0.85 output chance therefore asks for 6 of each step ingredient where Create's JEI shows 5.
-This is not an off-by-one — it is the expected cost of one success versus the cost of one attempt. Do not "fix" it by
-dropping the chance.
+**Chanced outputs read higher than in JEI, and that is a setting, not a bug.** `EmiStack#setChance` makes EMI's bill of
+materials budget the failure rate: `TreeCost` turns a produce chance into `1 / chance` and reports
+`round(amount / chance)`. A sequenced assembly with 5 loops and a ~0.85 output chance therefore asks for 6 of each step
+ingredient where Create's JEI shows 5 — the expected cost of one success versus the cost of one attempt. **Never drop a
+`setChance` call to make the numbers match JEI.** The choice belongs to `Config.chanceAmounts`.
+
+`EXPECTED` (default) leaves EMI untouched. `RAW` neutralizes the chance **at its source**, in `ChanceState#produce` /
+`#consume`, so nothing is ever flagged chanced: costs stay flat, the `≈` sign and the gold highlight disappear, and
+crafting progress consumes the inventory one for one instead of truncating `amount -= (long) (given / chance)`.
+Neutralizing at display time instead does not work — it was tried, and the progress counter stalls because the
+consumption itself happens in expected space.
+
+Under `RAW` the expected value then exists nowhere, so [
+`ExpectedCostIndex`](src/main/java/fr/syuko/emicreatecompat/emi/bom/ExpectedCostIndex.java) rebuilds it: a preliminary
+`calculateCost()` pass runs inside `BomAmountMode.whileMeasuringExpectedCosts`, which suspends `rawAmounts()` for its
+duration, and the result is indexed per ingredient for the Total Cost tooltip. Ingredients with no chanced share are
+left out of the index so they gain no tooltip line.
+
+Independently of the mode, `Config.alignChancedFavorites` works around an EMI inconsistency: `EmiFavorites#countRecipes`
+counts from the raw `MaterialNode#totalNeeded` while the tree displays the chanced amount, so a step reading 6 in the
+tree shows 5 in the favorites bar and only drops once two items have been gathered. `TreeCostMixin` records the
+accumulated multiplier on each node through the `ChancedNode` interface, and `ChancedFavorites` applies it back.
 
 **Dependency rule:** `emi/` and `create/` do not know about each other. They meet in `mixin/` (UI injection) and in
 `category/` (the EMI plugin). Inside a `category/xxx/` package the boundary is kept by naming, and it is greppable —
