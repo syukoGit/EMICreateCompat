@@ -6,7 +6,11 @@
   "mixins": [
   ],
   "client": [
+    "BoMScreenHoverMixin",
+    "BoMScreenMixin",
+    "BoMScreenNodeMixin",
     "CategoryEntryAccessor",
+    "ChanceStateMixin",
     "StockKeeperRequestScreenMixin"
   ],
   "injectors": {

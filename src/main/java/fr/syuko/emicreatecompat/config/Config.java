@@ -39,6 +39,17 @@ public final class Config {
                             "Applies on the next EMI reload: rejoin a world or reload resources.")
                    .defineEnum("recipeRegistration", RecipeRegistration.AUTO);
 
+    private static final ModConfigSpec.EnumValue<ChanceAmounts>
+            CHANCE_AMOUNTS =
+            BUILDER.comment("How EMI's recipe tree shows amounts for outputs that carry a produce chance:",
+                            " EXPECTED = EMI's own behavior, the average cost of one success",
+                            "            (round(amount / chance)), marked with a gold approximation sign,",
+                            " RAW = the amounts the recipes actually declare, with no gold highlight,",
+                            "       and the expected cost moved to the tooltip of the Total Cost row.",
+                            "       Crafting progress then counts one for one.",
+                            "Applies to every mod's chanced recipes, not only Create's.")
+                   .defineEnum("chanceAmounts", ChanceAmounts.EXPECTED);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;
@@ -48,6 +59,8 @@ public final class Config {
     public static boolean countPendingOrder = true;
 
     public static RecipeRegistration recipeRegistration = RecipeRegistration.AUTO;
+
+    public static ChanceAmounts chanceAmounts = ChanceAmounts.EXPECTED;
 
     private Config() {
     }
@@ -61,5 +74,6 @@ public final class Config {
         treeVisibility = TREE_VISIBILITY.get();
         countPendingOrder = COUNT_PENDING_ORDER.get();
         recipeRegistration = RECIPE_REGISTRATION.get();
+        chanceAmounts = CHANCE_AMOUNTS.get();
     }
 }

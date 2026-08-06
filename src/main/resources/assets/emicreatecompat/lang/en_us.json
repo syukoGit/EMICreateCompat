@@ -1,3 +1,4 @@
 {
-  "gui.emicreatecompat.stock_keeper.recipe_tree": "EMI Recipe Tree"
+  "gui.emicreatecompat.stock_keeper.recipe_tree": "EMI Recipe Tree",
+  "tooltip.emicreatecompat.expected_cost": "Expected cost: ≈%s"
 }
