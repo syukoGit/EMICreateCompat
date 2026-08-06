@@ -1,0 +1,10 @@
+package fr.syuko.emicreatecompat.category.sawing;
+
+import fr.syuko.emicreatecompat.create.recipe.ChancedStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.List;
+
+public record SawingDisplay(ResourceLocation id, Ingredient input, List<ChancedStack> outputs) {
+}

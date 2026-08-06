@@ -8,30 +8,46 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 @EventBusSubscriber(modid = Emicreatecompat.MODID)
 public final class Config {
-
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    private static final ModConfigSpec.BooleanValue ENABLED = BUILDER
-            .comment("Master switch: show the recipe-tree category at the top of Create's Stock Keeper.")
-            .define("enabled", true);
+    private static final ModConfigSpec.BooleanValue
+            ENABLED =
+            BUILDER.comment("Master switch: show the recipe-tree category at the top of Create's Stock Keeper.")
+                   .define("enabled", true);
 
-    private static final ModConfigSpec.EnumValue<TreeVisibility> TREE_VISIBILITY = BUILDER
-            .comment("When to show the category:",
-                    " ALWAYS = as soon as an EMI recipe tree is active,",
-                    " CRAFTING_MODE_ONLY = only while EMI's recipe-tree (crafting) view is enabled.")
-            .defineEnum("treeVisibility", TreeVisibility.ALWAYS);
+    private static final ModConfigSpec.EnumValue<TreeVisibility>
+            TREE_VISIBILITY =
+            BUILDER.comment("When to show the category:",
+                            " ALWAYS = as soon as an EMI recipe tree is active,",
+                            " CRAFTING_MODE_ONLY = only while EMI's recipe-tree (crafting) view is enabled.")
+                   .defineEnum("treeVisibility", TreeVisibility.ALWAYS);
 
-    private static final ModConfigSpec.BooleanValue COUNT_PENDING_ORDER = BUILDER
-            .comment("Count items already queued in the Stock Keeper order basket",
-                    "(the list before you press send) as if they were in the player inventory, ",
-                    "so the recipe tree updates live as you build your order.")
-            .define("countPendingOrder", true);
+    private static final ModConfigSpec.BooleanValue
+            COUNT_PENDING_ORDER =
+            BUILDER.comment("Count items already queued in the Stock Keeper order basket",
+                            "(the list before you press send) as if they were in the player inventory, ",
+                            "so the recipe tree updates live as you build your order.")
+                   .define("countPendingOrder", true);
+
+    private static final ModConfigSpec.EnumValue<RecipeRegistration>
+            RECIPE_REGISTRATION =
+            BUILDER.comment("Whether to register Create's machine recipes as native EMI categories:",
+                            " AUTO = only when JEI is absent, because EMI already bridges Create's JEI plugin",
+                            "        and registering on top of it would show every recipe twice,",
+                            " ALWAYS = register even when JEI is present (expect duplicated categories),",
+                            " NEVER = never register them.",
+                            "Applies on the next EMI reload: rejoin a world or reload resources.")
+                   .defineEnum("recipeRegistration", RecipeRegistration.AUTO);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;
+
     public static TreeVisibility treeVisibility = TreeVisibility.ALWAYS;
+
     public static boolean countPendingOrder = true;
+
+    public static RecipeRegistration recipeRegistration = RecipeRegistration.AUTO;
 
     private Config() {
     }
@@ -44,5 +60,6 @@ public final class Config {
         enabled = ENABLED.get();
         treeVisibility = TREE_VISIBILITY.get();
         countPendingOrder = COUNT_PENDING_ORDER.get();
+        recipeRegistration = RECIPE_REGISTRATION.get();
     }
 }
