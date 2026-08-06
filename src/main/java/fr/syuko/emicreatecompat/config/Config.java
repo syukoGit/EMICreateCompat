@@ -10,8 +10,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public final class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ModConfigSpec SPEC = BUILDER.build();
-
     private static final ModConfigSpec.BooleanValue
             ENABLED =
             BUILDER.comment("Master switch: show the recipe-tree category at the top of Create's Stock Keeper.")
@@ -61,6 +59,8 @@ public final class Config {
                             "Applies to every mod's chanced recipes, not only Create's.")
                    .define("alignChancedFavorites", true);
 
+    public static final ModConfigSpec SPEC = BUILDER.build();
+
     public static boolean enabled = true;
 
     public static TreeVisibility treeVisibility = TreeVisibility.ALWAYS;
@@ -74,6 +74,12 @@ public final class Config {
     public static boolean alignChancedFavorites = true;
 
     private Config() {
+    }
+
+    public static void setChanceAmounts(ChanceAmounts value) {
+        chanceAmounts = value;
+        CHANCE_AMOUNTS.set(value);
+        CHANCE_AMOUNTS.save();
     }
 
     @SubscribeEvent
