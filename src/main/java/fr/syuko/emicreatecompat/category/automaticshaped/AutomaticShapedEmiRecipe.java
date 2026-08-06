@@ -6,6 +6,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import fr.syuko.emicreatecompat.plugin.CreateEmiCategories;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class AutomaticShapedEmiRecipe extends BasicEmiRecipe {
@@ -18,22 +19,17 @@ public class AutomaticShapedEmiRecipe extends BasicEmiRecipe {
 
     private static final int OUTPUT_Y = 80;
 
-    private static final int SLOT_PITCH = 19;
-
-    private static final int GRID_CENTER = 53;
-
-    private final int width;
-
-    private final int height;
+    private final AutomaticShapedDisplay display;
 
     public AutomaticShapedEmiRecipe(AutomaticShapedDisplay display) {
         super(CreateEmiCategories.AUTOMATIC_SHAPED, display.id(), WIDTH, HEIGHT);
 
-        this.width = display.width();
-        this.height = display.height();
+        this.display = display;
 
         for (Ingredient ingredient : display.ingredients()) {
-            inputs.add(EmiIngredient.of(ingredient));
+            if (!ingredient.isEmpty()) {
+                inputs.add(EmiIngredient.of(ingredient));
+            }
         }
         catalysts.add(EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get()));
         outputs.add(EmiStack.of(display.output()));
@@ -41,29 +37,21 @@ public class AutomaticShapedEmiRecipe extends BasicEmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        int gridX = GRID_CENTER - width * SLOT_PITCH / 2;
-        int gridY = GRID_CENTER - height * SLOT_PITCH / 2;
-        int count = inputs.size();
+        widgets.addDrawable(0, 0, WIDTH, HEIGHT, (draw, mouseX, mouseY, delta) -> drawBackground(draw));
 
-        widgets.addDrawable(0,
-                            0,
-                            WIDTH,
-                            HEIGHT,
-                            (draw, mouseX, mouseY, delta) -> AutomaticShapedRender.draw(draw,
-                                                                                        0,
-                                                                                        0,
-                                                                                        gridX,
-                                                                                        gridY,
-                                                                                        width,
-                                                                                        height,
-                                                                                        count));
-
-        for (int i = 0; i < count; i++) {
-            int x = gridX + (i % width) * SLOT_PITCH;
-            int y = gridY + (i / width) * SLOT_PITCH;
-            widgets.addSlot(inputs.get(i), x, y);
+        int slot = 0;
+        for (int i = 0; i < display.ingredients().size(); i++) {
+            if (display.ingredients().get(i).isEmpty()) {
+                continue;
+            }
+            widgets.addSlot(inputs.get(slot), display.slotX(i), display.slotY(i));
+            slot++;
         }
 
         widgets.addSlot(outputs.getFirst(), OUTPUT_X, OUTPUT_Y).recipeContext(this);
+    }
+
+    private void drawBackground(GuiGraphics graphics) {
+        AutomaticShapedRender.draw(graphics, 0, 0, display);
     }
 }

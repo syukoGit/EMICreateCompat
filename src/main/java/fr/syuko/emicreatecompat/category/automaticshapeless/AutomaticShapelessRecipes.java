@@ -6,6 +6,7 @@ import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import fr.syuko.emicreatecompat.category.basin.BasinDisplay;
 import fr.syuko.emicreatecompat.category.basin.BasinDisplays;
+import fr.syuko.emicreatecompat.create.recipe.BasinRecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -28,8 +29,9 @@ public final class AutomaticShapelessRecipes {
         List<BasinDisplay> displays = new ArrayList<>();
 
         for (RecipeHolder<?> holder : manager.getRecipes()) {
-            if (!(holder.value() instanceof CraftingRecipe recipe) || recipe instanceof ShapedRecipe || recipe.getIngredients()
-                                                                                                              .size() <= 1 || MechanicalPressBlockEntity.canCompress(
+            if (!(holder.value() instanceof CraftingRecipe recipe) || recipe instanceof ShapedRecipe || BasinRecipes.present(
+                                                                                                                            recipe.getIngredients())
+                                                                                                                    .size() <= 1 || MechanicalPressBlockEntity.canCompress(
                     recipe) || AllRecipeTypes.shouldIgnoreInAutomation(holder)) {
                 continue;
             }

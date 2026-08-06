@@ -20,8 +20,6 @@ public class MechanicalCraftingEmiRecipe extends BasicEmiRecipe {
 
     private static final int OUTPUT_Y = 80;
 
-    private static final int SLOT_PITCH = 19;
-
     private final MechanicalCraftingDisplay display;
 
     public MechanicalCraftingEmiRecipe(MechanicalCraftingDisplay display) {
@@ -43,18 +41,14 @@ public class MechanicalCraftingEmiRecipe extends BasicEmiRecipe {
         widgets.addDrawable(0, 0, WIDTH, HEIGHT, (draw, mouseX, mouseY, delta) -> drawBackground(draw));
 
         float scale = display.scale();
-        int columns = display.width();
         int slot = 0;
 
         for (int i = 0; i < display.ingredients().size(); i++) {
-            Ingredient ingredient = display.ingredients().get(i);
-            if (ingredient.isEmpty()) {
+            if (display.ingredients().get(i).isEmpty()) {
                 continue;
             }
 
-            int x = display.gridX() + Math.round((i % columns) * SLOT_PITCH * scale);
-            int y = display.gridY() + Math.round(((float) i / columns) * SLOT_PITCH * scale);
-            widgets.add(new ScaledSlotWidget(inputs.get(slot), x, y, scale));
+            widgets.add(new ScaledSlotWidget(inputs.get(slot), display.slotX(i), display.slotY(i), scale));
             slot++;
         }
 

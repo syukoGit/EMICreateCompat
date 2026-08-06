@@ -5,6 +5,7 @@ import com.simibubi.create.content.kinetics.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import fr.syuko.emicreatecompat.category.basin.BasinDisplay;
+import fr.syuko.emicreatecompat.create.recipe.BasinRecipes;
 import fr.syuko.emicreatecompat.create.recipe.ChancedStack;
 import fr.syuko.emicreatecompat.create.recipe.CountedIngredient;
 import fr.syuko.emicreatecompat.create.recipe.HeatRequirement;
@@ -44,8 +45,11 @@ public final class AutomaticPackingRecipes {
             }
 
             List<CountedIngredient> inputs = new ArrayList<>();
-            for (Ingredient ingredient : recipe.getIngredients()) {
+            for (Ingredient ingredient : BasinRecipes.present(recipe.getIngredients())) {
                 inputs.add(new CountedIngredient(ingredient, 1));
+            }
+            if (inputs.isEmpty()) {
+                continue;
             }
 
             displays.add(new BasinDisplay(holder.id(),

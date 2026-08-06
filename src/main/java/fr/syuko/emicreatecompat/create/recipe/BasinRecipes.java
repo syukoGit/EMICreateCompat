@@ -4,6 +4,7 @@ import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.item.ItemHelper;
 import net.createmod.catnip.data.Pair;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
@@ -21,11 +22,23 @@ public final class BasinRecipes {
     public static List<CountedIngredient> itemInputs(BasinRecipe recipe) {
         List<CountedIngredient> inputs = new ArrayList<>();
 
-        for (Pair<Ingredient, MutableInt> condensed : ItemHelper.condenseIngredients(recipe.getIngredients())) {
+        for (Pair<Ingredient, MutableInt> condensed : ItemHelper.condenseIngredients(present(recipe.getIngredients()))) {
             inputs.add(new CountedIngredient(condensed.getFirst(), condensed.getSecond().getValue()));
         }
 
         return List.copyOf(inputs);
+    }
+
+    public static NonNullList<Ingredient> present(List<Ingredient> ingredients) {
+        NonNullList<Ingredient> filtered = NonNullList.create();
+
+        for (Ingredient ingredient : ingredients) {
+            if (!ingredient.isEmpty()) {
+                filtered.add(ingredient);
+            }
+        }
+
+        return filtered;
     }
 
     public static List<List<FluidStack>> fluidInputs(BasinRecipe recipe) {
