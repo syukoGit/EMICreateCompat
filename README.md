@@ -46,6 +46,8 @@ distance, the chunk is unloaded, the network is not responding - the line grays 
 you could not trust. After three unanswered requests the polling backs off to one request every 30 seconds, and if the
 ticker is proven gone on a chunk you have loaded, the binding is dropped, and you are told so.
 
+<img width="359" height="174" alt="image" src="https://github.com/user-attachments/assets/385fd036-9a53-4267-b00e-e16818238ed7" />
+
 </details>
 
 ### Recipe tree
@@ -64,6 +66,8 @@ the two at any time.
 - **Raw** - the amounts the recipes actually declare. The gold highlight and the `≈` disappear, crafting progress counts
   one for one instead of being truncated, and the expected cost moves to the tooltip of the Total Cost row so you never
   lose it.
+
+<img width="762" height="581" alt="java_MfxcehyHtK" src="https://github.com/user-attachments/assets/bfc26f31-0d3c-488e-a930-4cbc0215c5ce" />
 
 </details>
 
