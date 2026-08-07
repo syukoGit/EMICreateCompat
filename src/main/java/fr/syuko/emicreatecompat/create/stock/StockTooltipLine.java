@@ -18,7 +18,7 @@ public final class StockTooltipLine {
     }
 
     public static void append(ItemStack stack, List<Component> tooltip) {
-        if (!Config.showStockInTooltips || stack.isEmpty()) {
+        if (!Config.showStockInTooltips || stack.isEmpty() || Goggles.missing()) {
             return;
         }
 
