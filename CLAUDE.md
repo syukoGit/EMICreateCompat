@@ -68,12 +68,14 @@ Base package `fr.syuko.emicreatecompat` (group `fr.syuko`). Sub-packages:
   `category/pressing/`](src/main/java/fr/syuko/emicreatecompat/category/pressing).
 - **`mixin/`** — thin adapters only. A mixin captures a hook, gathers screen state, delegates to `emi`/`create`, and
   writes the result back. It holds **no business logic**. Register new classes in the `client` array of [
-  `emicreatecompat.mixins.json`](src/main/resources/emicreatecompat.mixins.json).
-  Seven of them target EMI **internals** rather than its API (`ChanceState`, `TreeCost`, `MaterialNode`, `EmiFavorites`,
+  `emicreatecompat.mixins.json`](src/main/resources/emicreatecompat.mixins.json). Seven of them target EMI **internals**
+  rather than its API (`ChanceState`, `TreeCost`, `MaterialNode`, `EmiFavorites`,
   `BoMScreen` and its private inner `Node` / `Hover`). Those are reached by `targets = "dev.emi.emi...$Node"`, pinned by
   bytecode ordinal, and declared `remap = false` because the classes are not Minecraft's. Injection points were checked
-  against EMI 1.1.24 with `javap` on the EMI jar; `defaultRequire: 1` turns a moved target into a loud startup failure
-  rather than a silent degradation. **Re-verify them whenever `emi_version` is bumped.**
+  with `javap` against every EMI 1.21.1 release from 1.1.13 to 1.1.24 — identical descriptors, opcode targets and
+  occurrence order throughout, which is what the `[1.1.13,1.2)` range in `neoforge.mods.toml` rests on.
+  `defaultRequire: 1` turns a moved target into a loud startup failure rather than a silent degradation. **Re-verify
+  them whenever `emi_version` is bumped.**
 - **`plugin/`** — the EMI plugin registry: [
   `CreateEmiPlugin`](src/main/java/fr/syuko/emicreatecompat/plugin/CreateEmiPlugin.java) (`@EmiEntrypoint`, discovered
   by EMI itself — no `neoforge.mods.toml` entry), `CreateEmiCategories`, the `RegisteredCategory` record, and the
