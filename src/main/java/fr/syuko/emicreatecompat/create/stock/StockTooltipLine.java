@@ -27,7 +27,7 @@ public final class StockTooltipLine {
             return;
         }
         if (availability != StockAvailability.LIVE) {
-            tooltip.add(line(UNKNOWN, ChatFormatting.GRAY));
+            tooltip.add(line(UNKNOWN, ChatFormatting.DARK_GRAY));
             return;
         }
 
@@ -41,7 +41,7 @@ public final class StockTooltipLine {
 
         tooltip.add(line(count >= BigItemStack.INF
                          ? INFINITE
-                         : String.valueOf(count), ChatFormatting.WHITE));
+                         : String.valueOf(count), ChatFormatting.GRAY));
     }
 
     private static Component line(String amount, ChatFormatting style) {
