@@ -41,7 +41,7 @@ public final class StockTooltipLine {
 
         tooltip.add(line(count >= BigItemStack.INF
                          ? INFINITE
-                         : String.valueOf(count), ChatFormatting.BLUE));
+                         : String.valueOf(count), ChatFormatting.WHITE));
     }
 
     private static Component line(String amount, ChatFormatting style) {
