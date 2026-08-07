@@ -12,6 +12,7 @@
     "CategoryEntryAccessor",
     "ChanceStateMixin",
     "EmiFavoritesMixin",
+    "LogisticalStockResponsePacketMixin",
     "MaterialNodeMixin",
     "StockKeeperRequestScreenMixin",
     "TreeCostMixin"
