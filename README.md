@@ -32,8 +32,8 @@ Items queued in the order basket count as owned, so the tree updates as you comp
 <details>
 <summary><b>Stock counts in item tooltips</b> - know what your network holds, anywhere</summary>
 
-Bind a stock network with the target button in the Stock Keeper's request screen. Every item tooltip then tells you how
-many the network holds. Click again to unbind.
+Bind a stock network with the target button in the Stock Keeper's request screen. While you wear Create's Engineer's
+Goggles, every item tooltip then tells you how many the network holds. Click again to unbind.
 
 The binding is saved per world or server. When the count cannot be trusted, the line grays out and shows `?`.
 
@@ -78,7 +78,7 @@ Options live in `config/emicreatecompat-client.toml` and are read on the client 
 | `chanceAmounts`          | `EXPECTED` / `RAW`              | `EXPECTED` | How the recipe tree shows amounts for outputs carrying a produce chance: the average cost of one success, or the amounts the recipes declare.                            |
 | `extraCraftThreshold`    | double, `0.0`-`1.0`             | `0.5`      | In `EXPECTED` mode, how much of an extra craft is tolerated before rounding up to one more whole craft. `0.0` always adds one, `0.5` rounds to the nearest, `1.0` never. |
 | `alignChancedFavorites`  | boolean                         | `true`     | Make the synthetic favorites of a chanced recipe show the same amount as the recipe tree does.                                                                           |
-| `showStockInTooltips`    | boolean                         | `true`     | Show how many of an item the bound stock network holds, on every item tooltip.                                                                                           |
+| `showStockInTooltips`    | boolean                         | `true`     | Show how many of an item the bound stock network holds, on every item tooltip, while wearing the Engineer's Goggles.                                                     |
 | `stockPollIntervalTicks` | int, `20`-`200`                 | `40`       | How often, in ticks, to ask the bound network for its contents while a screen is open. Raise it on a busy server; 20 ticks = 1 second.                                   |
 
 ## Building from source

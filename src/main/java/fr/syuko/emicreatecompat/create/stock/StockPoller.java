@@ -31,7 +31,7 @@ public final class StockPoller {
     public static void tick() {
         ticks++;
 
-        if (!Config.showStockInTooltips || Minecraft.getInstance().screen == null) {
+        if (!Config.showStockInTooltips || Minecraft.getInstance().screen == null || Goggles.missing()) {
             return;
         }
 

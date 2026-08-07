@@ -71,7 +71,8 @@ public final class Config {
 
     private static final ModConfigSpec.BooleanValue SHOW_STOCK_IN_TOOLTIPS = BUILDER.comment(
                                                                                             "Show how many of an item the bound Create stock network holds, on every item tooltip.",
-                                                                                            "Bind a network with the target button in the Stock Keeper's request screen.")
+                                                                                            "Bind a network with the target button in the Stock Keeper's request screen.",
+                                                                                            "The line only shows while wearing Create's Engineer's Goggles.")
                                                                                     .define("showStockInTooltips",
                                                                                             true);
 
