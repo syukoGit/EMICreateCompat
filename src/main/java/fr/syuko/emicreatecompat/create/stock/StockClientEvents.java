@@ -16,6 +16,7 @@ public final class StockClientEvents {
 
     @SubscribeEvent
     static void onClientTick(ClientTickEvent.Post event) {
+        TickerPresence.verify();
         StockPoller.tick();
     }
 
