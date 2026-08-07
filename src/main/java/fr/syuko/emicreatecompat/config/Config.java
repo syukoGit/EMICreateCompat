@@ -75,6 +75,13 @@ public final class Config {
                                                                                     .define("showStockInTooltips",
                                                                                             true);
 
+    private static final ModConfigSpec.IntValue STOCK_POLL_INTERVAL_TICKS = BUILDER.comment(
+            "How often, in ticks, to ask the bound stock network for its contents while a screen",
+            "is open. Nothing is sent when no screen is open, or while Create's own Stock Keeper",
+            "screen is already refreshing the same network.",
+            "Each refresh costs one packet per 100 distinct items the network holds, so raise this",
+            "on a busy server. 20 ticks = 1 second.").defineInRange("stockPollIntervalTicks", 40, 20, 200);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;
@@ -92,6 +99,8 @@ public final class Config {
     public static double extraCraftThreshold = 0.5D;
 
     public static boolean showStockInTooltips = true;
+
+    public static int stockPollIntervalTicks = 40;
 
     private Config() {
     }
@@ -115,5 +124,6 @@ public final class Config {
         alignChancedFavorites = ALIGN_CHANCED_FAVORITES.get();
         extraCraftThreshold = EXTRA_CRAFT_THRESHOLD.get();
         showStockInTooltips = SHOW_STOCK_IN_TOOLTIPS.get();
+        stockPollIntervalTicks = STOCK_POLL_INTERVAL_TICKS.get();
     }
 }

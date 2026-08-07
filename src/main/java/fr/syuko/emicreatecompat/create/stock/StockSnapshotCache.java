@@ -30,6 +30,7 @@ public final class StockSnapshotCache {
         }
         snapshot = StockSnapshot.of(pending);
         pending = null;
+        StockPoller.onSnapshotReceived();
     }
 
     public static StockSnapshot current() {
@@ -39,5 +40,6 @@ public final class StockSnapshotCache {
     public static void clear() {
         pending = null;
         snapshot = null;
+        StockPoller.reset();
     }
 }

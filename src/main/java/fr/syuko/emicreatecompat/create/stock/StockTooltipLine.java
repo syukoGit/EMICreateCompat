@@ -12,6 +12,8 @@ public final class StockTooltipLine {
 
     private static final String INFINITE = "∞";
 
+    private static final String UNKNOWN = "?";
+
     private StockTooltipLine() {
     }
 
@@ -20,20 +22,29 @@ public final class StockTooltipLine {
             return;
         }
 
-        StockSnapshot snapshot = StockSnapshotCache.current();
-        if (snapshot == null) {
+        StockAvailability availability = StockPoller.availability();
+        if (availability == StockAvailability.NOT_BOUND) {
+            return;
+        }
+        if (availability != StockAvailability.LIVE) {
+            tooltip.add(line(UNKNOWN, ChatFormatting.GRAY));
             return;
         }
 
-        int count = snapshot.countOf(stack);
+        StockSnapshot snapshot = StockSnapshotCache.current();
+        int count = snapshot == null
+                    ? 0
+                    : snapshot.countOf(stack);
         if (count <= 0) {
             return;
         }
 
-        String amount = count >= BigItemStack.INF
-                        ? INFINITE
-                        : String.valueOf(count);
-        tooltip.add(Component.translatable("tooltip.emicreatecompat.stock_count", amount)
-                             .withStyle(ChatFormatting.BLUE));
+        tooltip.add(line(count >= BigItemStack.INF
+                         ? INFINITE
+                         : String.valueOf(count), ChatFormatting.BLUE));
+    }
+
+    private static Component line(String amount, ChatFormatting style) {
+        return Component.translatable("tooltip.emicreatecompat.stock_count", amount).withStyle(style);
     }
 }

@@ -25,6 +25,10 @@ public final class BoundNetwork {
         StockSnapshotCache.clear();
     }
 
+    public static NetworkBinding current() {
+        return binding;
+    }
+
     public static boolean isBoundTo(ResourceKey<Level> dimension, BlockPos pos) {
         return binding != null && binding.dimension().equals(dimension) && binding.pos().equals(pos);
     }
