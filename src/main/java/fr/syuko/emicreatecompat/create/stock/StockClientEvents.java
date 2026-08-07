@@ -5,11 +5,17 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 @EventBusSubscriber(modid = Emicreatecompat.MODID, value = Dist.CLIENT)
 public final class StockClientEvents {
 
     private StockClientEvents() {
+    }
+
+    @SubscribeEvent
+    static void onItemTooltip(ItemTooltipEvent event) {
+        StockTooltipLine.append(event.getItemStack(), event.getToolTip());
     }
 
     @SubscribeEvent

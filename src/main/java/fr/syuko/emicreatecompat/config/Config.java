@@ -69,6 +69,12 @@ public final class Config {
                                                                                                  0.0D,
                                                                                                  1.0D);
 
+    private static final ModConfigSpec.BooleanValue SHOW_STOCK_IN_TOOLTIPS = BUILDER.comment(
+                                                                                            "Show how many of an item the bound Create stock network holds, on every item tooltip.",
+                                                                                            "Bind a network with the target button in the Stock Keeper's request screen.")
+                                                                                    .define("showStockInTooltips",
+                                                                                            true);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean enabled = true;
@@ -84,6 +90,8 @@ public final class Config {
     public static boolean alignChancedFavorites = true;
 
     public static double extraCraftThreshold = 0.5D;
+
+    public static boolean showStockInTooltips = true;
 
     private Config() {
     }
@@ -106,5 +114,6 @@ public final class Config {
         chanceAmounts = CHANCE_AMOUNTS.get();
         alignChancedFavorites = ALIGN_CHANCED_FAVORITES.get();
         extraCraftThreshold = EXTRA_CRAFT_THRESHOLD.get();
+        showStockInTooltips = SHOW_STOCK_IN_TOOLTIPS.get();
     }
 }

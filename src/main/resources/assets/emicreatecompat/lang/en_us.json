@@ -2,6 +2,7 @@
   "gui.emicreatecompat.stock_keeper.recipe_tree": "EMI Recipe Tree",
   "gui.emicreatecompat.stock_keeper.bind": "Bind to this stock network",
   "gui.emicreatecompat.stock_keeper.unbind": "Unbind from this stock network",
+  "tooltip.emicreatecompat.stock_count": "In Create Stock: %s",
   "tooltip.emicreatecompat.expected_mode_cost": "Cost in expected mode: ≈%s",
   "tooltip.emicreatecompat.chance_mode.expected": "Chance amounts: expected",
   "tooltip.emicreatecompat.chance_mode.expected.description": "Chanced steps show the average cost of one success.",
