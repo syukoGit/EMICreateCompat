@@ -20,12 +20,10 @@ coherent tool instead of two side-by-side ones.
 <details>
 <summary><b>EMI recipe tree category</b> - see what your network already stocks</summary>
 
-When an EMI recipe tree is active, a category is added at the top of Create's Stock Keeper listing the stocked items
-that match the tree's missing ingredients. Branches you have already completed are filtered out, so only what you still
-need shows up.
+A category at the top of Create's Stock Keeper lists the stocked items your active EMI recipe tree still needs. What you
+already have is filtered out.
 
-Items already queued in the order basket count as owned, so the recipe tree recalculates while you compose your order -
-no need to send it first to see what is left to gather.
+Items queued in the order basket count as owned, so the tree updates as you compose your order.
 
 <img width="1242" height="1090" alt="java_DdDqmM7bj6" src="https://github.com/user-attachments/assets/fd2ab54d-e61d-4aee-8b6c-323bafdf620f" />
 
@@ -34,17 +32,10 @@ no need to send it first to see what is left to gather.
 <details>
 <summary><b>Stock counts in item tooltips</b> - know what your network holds, anywhere</summary>
 
-Bind a stock network once with the target button added to the Stock Keeper's request screen. Every item tooltip - in
-your inventory, in EMI, in any container - then gains a line telling you how many of that item the network holds. Click
-the button again to unbind.
+Bind a stock network with the target button in the Stock Keeper's request screen. Every item tooltip then tells you how
+many the network holds. Click again to unbind.
 
-The binding is saved per world or server, so it survives a relog and follows you back to the same save.
-
-The contents are refreshed on a timer while a screen is open, and nothing is sent while no screen is open or while
-Create's own Stock Keeper is already refreshing the same network. When the answer is stale - the ticker is out of render
-distance, the chunk is unloaded, the network is not responding - the line grays out and shows `?` instead of a number
-you could not trust. After three unanswered requests the polling backs off to one request every 30 seconds, and if the
-ticker is proven gone on a chunk you have loaded, the binding is dropped, and you are told so.
+The binding is saved per world or server. When the count cannot be trusted, the line grays out and shows `?`.
 
 <img width="359" height="174" alt="image" src="https://github.com/user-attachments/assets/385fd036-9a53-4267-b00e-e16818238ed7" />
 
@@ -55,17 +46,11 @@ ticker is proven gone on a chunk you have loaded, the binding is dropped, and yo
 <details>
 <summary><b>Expected / raw chance amounts</b> - choose how chanced recipes are counted</summary>
 
-EMI budgets the failure rate of a chanced output: a sequenced assembly with an ~85% output chance asks for 6 of each
-step ingredient where Create's JEI shows 5 - the expected cost of one success, versus the cost of one attempt. Neither
-number is wrong, so the mod makes it a choice, with a button added to EMI's bill-of-materials screen to switch between
-the two at any time.
+On chanced recipes, EMI asks for more than Create's JEI does: it pays for the failures. A button in EMI's
+bill-of-materials screen switches between the two readings.
 
-- **Expected** (default) - EMI's own behavior, the average cost of one success, marked with a gold `≈`. Because a
-  sequenced assembly cannot be run half way, the amounts are snapped to a whole number of crafts, with a configurable
-  tolerance for how much of an extra craft is added before rounding up.
-- **Raw** - the amounts the recipes actually declare. The gold highlight and the `≈` disappear, crafting progress counts
-  one for one instead of being truncated, and the expected cost moves to the tooltip of the Total Cost row so you never
-  lose it.
+- **Expected** (default) - what one success costs on average, rounded to whole crafts and marked with a gold `≈`.
+- **Raw** - what the recipes declare, with the expected cost moved to the Total Cost tooltip.
 
 <img width="762" height="581" alt="java_MfxcehyHtK" src="https://github.com/user-attachments/assets/bfc26f31-0d3c-488e-a930-4cbc0215c5ce" />
 
