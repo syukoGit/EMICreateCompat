@@ -6,8 +6,15 @@
   "mixins": [
   ],
   "client": [
+    "BoMScreenHoverMixin",
+    "BoMScreenMixin",
+    "BoMScreenNodeMixin",
     "CategoryEntryAccessor",
-    "StockKeeperRequestScreenMixin"
+    "ChanceStateMixin",
+    "EmiFavoritesMixin",
+    "MaterialNodeMixin",
+    "StockKeeperRequestScreenMixin",
+    "TreeCostMixin"
   ],
   "injectors": {
     "defaultRequire": 1
