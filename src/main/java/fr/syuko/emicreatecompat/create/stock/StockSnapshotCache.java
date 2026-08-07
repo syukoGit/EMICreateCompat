@@ -10,6 +10,8 @@ public final class StockSnapshotCache {
 
     private static List<BigItemStack> pending;
 
+    private static BlockPos pendingPos;
+
     private static StockSnapshot snapshot;
 
     private StockSnapshotCache() {
@@ -17,11 +19,13 @@ public final class StockSnapshotCache {
 
     public static void accept(BlockPos pos, List<BigItemStack> items, boolean lastPacket) {
         if (!BoundNetwork.matchesCurrentLevel(pos)) {
+            discardPending();
             return;
         }
 
-        if (pending == null) {
+        if (pending == null || !pos.equals(pendingPos)) {
             pending = new ArrayList<>();
+            pendingPos = pos;
         }
         pending.addAll(items);
 
@@ -29,7 +33,7 @@ public final class StockSnapshotCache {
             return;
         }
         snapshot = StockSnapshot.of(pending);
-        pending = null;
+        discardPending();
         StockPoller.onSnapshotReceived();
     }
 
@@ -38,8 +42,13 @@ public final class StockSnapshotCache {
     }
 
     public static void clear() {
-        pending = null;
+        discardPending();
         snapshot = null;
         StockPoller.reset();
+    }
+
+    private static void discardPending() {
+        pending = null;
+        pendingPos = null;
     }
 }
