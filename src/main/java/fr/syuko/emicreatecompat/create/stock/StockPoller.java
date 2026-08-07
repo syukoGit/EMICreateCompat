@@ -13,11 +13,17 @@ public final class StockPoller {
 
     private static final int STALE_INTERVALS = 3;
 
+    private static final int UNANSWERED_REQUESTS_BEFORE_BACKOFF = 3;
+
+    private static final int BACKOFF_INTERVAL_TICKS = 600;
+
     private static long ticks;
 
     private static long lastRequestTick = NEVER;
 
     private static long lastResponseTick = NEVER;
+
+    private static int unansweredRequests;
 
     private StockPoller() {
     }
@@ -34,13 +40,23 @@ public final class StockPoller {
             return;
         }
 
-        long interval = Config.stockPollIntervalTicks;
+        long interval = pollInterval();
         if (since(lastRequestTick) < interval || since(lastResponseTick) < interval) {
             return;
         }
 
+        if (lastRequestTick != NEVER && lastRequestTick > lastResponseTick) {
+            unansweredRequests++;
+        }
+
         CatnipServices.NETWORK.sendToServer(new LogisticalStockRequestPacket(binding.pos()));
         lastRequestTick = ticks;
+    }
+
+    private static long pollInterval() {
+        return unansweredRequests >= UNANSWERED_REQUESTS_BEFORE_BACKOFF
+               ? BACKOFF_INTERVAL_TICKS
+               : Config.stockPollIntervalTicks;
     }
 
     public static StockAvailability availability() {
@@ -67,11 +83,13 @@ public final class StockPoller {
 
     public static void onSnapshotReceived() {
         lastResponseTick = ticks;
+        unansweredRequests = 0;
     }
 
     public static void reset() {
         lastRequestTick = NEVER;
         lastResponseTick = NEVER;
+        unansweredRequests = 0;
     }
 
     private static long since(long tick) {

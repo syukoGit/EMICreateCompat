@@ -76,11 +76,18 @@ public final class Config {
                                                                                             true);
 
     private static final ModConfigSpec.IntValue STOCK_POLL_INTERVAL_TICKS = BUILDER.comment(
-            "How often, in ticks, to ask the bound stock network for its contents while a screen",
-            "is open. Nothing is sent when no screen is open, or while Create's own Stock Keeper",
-            "screen is already refreshing the same network.",
-            "Each refresh costs one packet per 100 distinct items the network holds, so raise this",
-            "on a busy server. 20 ticks = 1 second.").defineInRange("stockPollIntervalTicks", 40, 20, 200);
+                                                                                           "How often, in ticks, to ask the bound stock network for its contents while a screen",
+                                                                                           "is open. Nothing is sent when no screen is open, or while Create's own Stock Keeper",
+                                                                                           "screen is already refreshing the same network.",
+                                                                                           "Each refresh costs one packet per 100 distinct items the network holds, so raise this",
+                                                                                           "on a busy server. 20 ticks = 1 second.",
+                                                                                           "After three unanswered requests the interval drops to one every 30 seconds until the",
+                                                                                           "network answers again, so an unloaded or broken ticker costs almost nothing.")
+                                                                                   .defineInRange(
+                                                                                           "stockPollIntervalTicks",
+                                                                                           40,
+                                                                                           20,
+                                                                                           200);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
