@@ -31,6 +31,42 @@ no need to send it first to see what is left to gather.
 
 </details>
 
+<details>
+<summary><b>Stock counts in item tooltips</b> - know what your network holds, anywhere</summary>
+
+Bind a stock network once with the target button added to the Stock Keeper's request screen. Every item tooltip - in
+your inventory, in EMI, in any container - then gains a line telling you how many of that item the network holds. Click
+the button again to unbind.
+
+The binding is saved per world or server, so it survives a relog and follows you back to the same save.
+
+The contents are refreshed on a timer while a screen is open, and nothing is sent while no screen is open or while
+Create's own Stock Keeper is already refreshing the same network. When the answer is stale - the ticker is out of render
+distance, the chunk is unloaded, the network is not responding - the line grays out and shows `?` instead of a number
+you could not trust. After three unanswered requests the polling backs off to one request every 30 seconds, and if the
+ticker is proven gone on a chunk you have loaded, the binding is dropped, and you are told so.
+
+</details>
+
+### Recipe tree
+
+<details>
+<summary><b>Expected / raw chance amounts</b> - choose how chanced recipes are counted</summary>
+
+EMI budgets the failure rate of a chanced output: a sequenced assembly with an ~85% output chance asks for 6 of each
+step ingredient where Create's JEI shows 5 - the expected cost of one success, versus the cost of one attempt. Neither
+number is wrong, so the mod makes it a choice, with a button added to EMI's bill-of-materials screen to switch between
+the two at any time.
+
+- **Expected** (default) - EMI's own behavior, the average cost of one success, marked with a gold `≈`. Because a
+  sequenced assembly cannot be run half way, the amounts are snapped to a whole number of crafts, with a configurable
+  tolerance for how much of an extra craft is added before rounding up.
+- **Raw** - the amounts the recipes actually declare. The gold highlight and the `≈` disappear, crafting progress counts
+  one for one instead of being truncated, and the expected cost moves to the tooltip of the Total Cost row so you never
+  lose it.
+
+</details>
+
 ## Requirements
 
 |           |                            |
@@ -45,16 +81,16 @@ no need to send it first to see what is left to gather.
 
 Options live in `config/emicreatecompat-client.toml` and are read on the client only.
 
-| Option              | Type                            | Default              | Description                                                                                                                                |
-|---------------------|---------------------------------|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| `enabled`           | boolean                         | `true`               | Master switch: show the recipe-tree category at the top of Create's Stock Keeper.                                                          |
-| `treeVisibility`    | `ALWAYS` / `CRAFTING_MODE_ONLY` | `CRAFTING_MODE_ONLY` | When to show the category: as soon as an EMI recipe tree is active, or only while EMI's recipe-tree (crafting) view is enabled.            |
-| `countPendingOrder` | boolean                         | `true`               | Count items already queued in the order basket as if they were in your inventory, so the recipe tree updates live as you build your order. |
-
-## Roadmap
-
-- Full Create recipe support in EMI, without needing JEI
-- Support for multi-output recipes and chance percentages
+| Option                   | Type                            | Default    | Description                                                                                                                                                              |
+|--------------------------|---------------------------------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `enabled`                | boolean                         | `true`     | Master switch: show the recipe-tree category at the top of Create's Stock Keeper.                                                                                        |
+| `treeVisibility`         | `ALWAYS` / `CRAFTING_MODE_ONLY` | `ALWAYS`   | When to show the category: as soon as an EMI recipe tree is active, or only while EMI's recipe-tree (crafting) view is enabled.                                          |
+| `countPendingOrder`      | boolean                         | `true`     | Count items already queued in the order basket as if they were in your inventory, so the recipe tree updates live as you build your order.                               |
+| `chanceAmounts`          | `EXPECTED` / `RAW`              | `EXPECTED` | How the recipe tree shows amounts for outputs carrying a produce chance: the average cost of one success, or the amounts the recipes declare.                            |
+| `extraCraftThreshold`    | double, `0.0`-`1.0`             | `0.5`      | In `EXPECTED` mode, how much of an extra craft is tolerated before rounding up to one more whole craft. `0.0` always adds one, `0.5` rounds to the nearest, `1.0` never. |
+| `alignChancedFavorites`  | boolean                         | `true`     | Make the synthetic favorites of a chanced recipe show the same amount as the recipe tree does.                                                                           |
+| `showStockInTooltips`    | boolean                         | `true`     | Show how many of an item the bound stock network holds, on every item tooltip.                                                                                           |
+| `stockPollIntervalTicks` | int, `20`-`200`                 | `40`       | How often, in ticks, to ask the bound network for its contents while a screen is open. Raise it on a busy server; 20 ticks = 1 second.                                   |
 
 ## Building from source
 
