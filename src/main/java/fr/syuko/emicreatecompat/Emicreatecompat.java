@@ -14,7 +14,7 @@ public class Emicreatecompat {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public Emicreatecompat(ModContainer modContainer) {
-        LOGGER.info("EMICreateCompat loading");
+        LOGGER.info("EMI for Create loading");
         modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
     }
 }

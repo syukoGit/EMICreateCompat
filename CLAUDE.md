@@ -4,13 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-EMICreateCompat is a **client-side NeoForge mod** that adds features bridging **EMI** (recipe/item viewer) and
+EMI for Create is a **client-side NeoForge mod** that adds features bridging **EMI** (recipe/item viewer) and
 **Create** (tech/automation mod). The first planned feature: when an EMI recipe tree is active (resource breakdown
 shown), display a category at the top of the Create stock UI listing the available Create-stock resources that match the
 recipe tree's ingredients.
 
 All features are display/UI oriented — treat this as a **client-only** mod (`Dist.CLIENT`); avoid adding server-side
 logic unless a feature genuinely requires it.
+
+The display name is **EMI for Create** (`mod_name`), but the identifier stays `emicreatecompat` everywhere it is
+technically load-bearing: `mod_id`, the `fr.syuko.emicreatecompat` package, `emicreatecompat.mixins.json`, the
+`assets/emicreatecompat/` resources, the lang keys and the `emicreatecompat-client.toml` config file. Renaming those
+would drop the config of every existing install, so keep them as they are.
 
 ## Environment
 

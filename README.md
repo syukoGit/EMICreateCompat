@@ -1,4 +1,4 @@
-# Create for EMI
+# EMI for Create
 
 **Better integration between EMI and Create — plus a few extras.**
 
@@ -6,7 +6,7 @@
 
 ## About
 
-Create for EMI improves the compatibility between [EMI](https://github.com/emilyploszaj/emi) and
+EMI for Create improves the compatibility between [EMI](https://github.com/emilyploszaj/emi) and
 [Create](https://github.com/Creators-of-Create/Create), and adds new features on top of the two mods so they work as one
 coherent tool instead of two side-by-side ones.
 
