@@ -29,13 +29,13 @@ side = "BOTH"
 [[dependencies."${mod_id}"]]
 modId = "emi"
 type = "required"
-versionRange = "[1.1.24,1.2)"
+versionRange = "[1.1.13,1.2)"
 ordering = "AFTER"
 side = "CLIENT"
 
 [[dependencies."${mod_id}"]]
 modId = "create"
 type = "required"
-versionRange = "[6.0.10,)"
+versionRange = "[6.0.7,7)"
 ordering = "AFTER"
 side = "CLIENT"
