@@ -99,7 +99,10 @@ Base package `fr.syuko.emicreatecompat` (group `fr.syuko`). Sub-packages:
   makes produce chances independent of who displays a recipe. It walks every registered `EmiRecipe`, resolves the
   Minecraft recipe behind it and posts the chance onto the outputs. Display and chance are **two separate concerns**:
   the categories are ours only when JEI is absent, the chance is always ours. Keep it that way — folding the chance back
-  into `category/` is what made it vanish under JEI in the first place.
+  into `category/` is what made it vanish under JEI in the first place. **`ChanceInjector` is the only caller of
+  `EmiStack#setChance` in the mod**, and `grep -rn "setChance" category/` must return nothing. A second writer is not
+  merely redundant: an output that already carries a chance is skipped without consuming its `ChancedStack`, so the
+  match cursor drifts and a later guaranteed output of the same item can inherit the chanced entry.
 - **`plugin/`** — the EMI plugin registry: [
   `CreateEmiPlugin`](src/main/java/fr/syuko/emicreatecompat/plugin/CreateEmiPlugin.java) (`@EmiEntrypoint`, discovered
   by EMI itself — no `neoforge.mods.toml` entry), `CreateEmiCategories`, the `RegisteredCategory` record, and the

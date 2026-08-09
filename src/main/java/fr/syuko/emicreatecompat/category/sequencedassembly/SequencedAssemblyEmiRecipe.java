@@ -56,7 +56,7 @@ public class SequencedAssemblyEmiRecipe extends BasicEmiRecipe {
             }
         }
 
-        outputs.add(EmiStack.of(display.output()).setChance(display.outputChance()));
+        outputs.add(EmiStack.of(display.output()));
     }
 
     @Override
