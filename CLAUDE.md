@@ -35,11 +35,18 @@ Use the Gradle wrapper (`./gradlew` on bash, `gradlew.bat` on cmd). Build config
 ./gradlew runData            # run data generators (output: src/generated/resources)
 ```
 
-`clientWithJei` is a second `neoForge.runs` entry whose `clientWithJeiAdditionalRuntimeClasspath` carries JEI, so JEI
-reaches that run only — `runClient` stays JEI-free. Both share the `run/` directory, so `recipeRegistration` in
-`run/config/emicreatecompat-client.toml` carries over between them, and it decides what the JEI run actually exercises:
-under `AUTO` the plugin stands down and Create's recipes arrive through the JEMI bridge, under `ALWAYS` both sets are
-registered and every Create category shows twice.
+`clientWithJei` is a second `neoForge.runs` entry sharing the `run/` directory with `client` — same world, same config,
+same instance. JEI is toggled by the mods folder: `installJeiMod` copies the jar into `run/mods/` and hangs off
+`prepareClientWithJeiRun`, `removeJeiMod` deletes it and hangs off `prepareClientRun`, so whichever run is launched
+prepares the folder for itself. **JEI must arrive as a mod, not as a classpath entry.** A per-run
+`additionalRuntimeClasspath` was tried first and fails silently in the worst way: the `mezz.jei` classes load — so EMI's
+own JEI mixins apply and nothing errors — but FML never registers a `jei` mod, JEMI never starts, and the run quietly
+tests the no-JEI case. Jars listed in `build/moddev/<run>LegacyClasspath.txt` are libraries; mods reach FML by another
+path, which is why `emi-neoforge` appears in no file under `build/moddev/`.
+
+`recipeRegistration` in `run/config/emicreatecompat-client.toml` decides what the JEI run exercises: under `AUTO` the
+plugin stands down and Create's recipes arrive through the JEMI bridge, under `ALWAYS` both sets are registered and
+every Create category shows twice. Check it before trusting a JEI-run result.
 
 There are no tests yet. Gametests are wired up (`neoforge.enabledGameTestNamespaces=emicreatecompat`) and run via the
 `runGameTestServer` config / the in-game `/test` command if added later.
@@ -80,14 +87,19 @@ Base package `fr.syuko.emicreatecompat` (group `fr.syuko`). Sub-packages:
   `category/pressing/`](src/main/java/fr/syuko/emicreatecompat/category/pressing).
 - **`mixin/`** — thin adapters only. A mixin captures a hook, gathers screen state, delegates to `emi`/`create`, and
   writes the result back. It holds **no business logic**. Register new classes in the `client` array of [
-  `emicreatecompat.mixins.json`](src/main/resources/emicreatecompat.mixins.json). Seven of them target EMI **internals**
-  rather than its API (`ChanceState`, `TreeCost`, `MaterialNode`, `EmiFavorites`,
+  `emicreatecompat.mixins.json`](src/main/resources/emicreatecompat.mixins.json). Eight of them target EMI **internals**
+  rather than its API (`ChanceState`, `TreeCost`, `MaterialNode`, `EmiFavorites`, `EmiRecipes`,
   `BoMScreen` and its private inner `Node` / `Hover`). Those are reached by `targets = "dev.emi.emi...$Node"`, pinned by
   bytecode ordinal, and declared `remap = false` because the classes are not Minecraft's. Injection points were checked
   with `javap` against every EMI 1.21.1 release from 1.1.13 to 1.1.24 — identical descriptors, opcode targets and
   occurrence order throughout, which is what the `[1.1.13,1.2)` range in `neoforge.mods.toml` rests on.
   `defaultRequire: 1` turns a moved target into a loud startup failure rather than a silent degradation. **Re-verify
   them whenever `emi_version` is bumped.**
+- **`chance/`** — [`ChanceInjector`](src/main/java/fr/syuko/emicreatecompat/chance/ChanceInjector.java), the layer that
+  makes produce chances independent of who displays a recipe. It walks every registered `EmiRecipe`, resolves the
+  Minecraft recipe behind it and posts the chance onto the outputs. Display and chance are **two separate concerns**:
+  the categories are ours only when JEI is absent, the chance is always ours. Keep it that way — folding the chance back
+  into `category/` is what made it vanish under JEI in the first place.
 - **`plugin/`** — the EMI plugin registry: [
   `CreateEmiPlugin`](src/main/java/fr/syuko/emicreatecompat/plugin/CreateEmiPlugin.java) (`@EmiEntrypoint`, discovered
   by EMI itself — no `neoforge.mods.toml` entry), `CreateEmiCategories`, the `RegisteredCategory` record, and the
@@ -123,9 +135,29 @@ Under `RAW` the expected value then exists nowhere, so [
 duration, and the result is indexed per ingredient for the Total Cost tooltip. Ingredients with no chanced share are
 left out of the index so they gain no tooltip line.
 
-The `≈`/`=` toggle only appears when the tree in front of the player actually has something chanced in it — a tree whose
-Create recipes came from EMI's JEI bridge carries no chance at all, and the button would switch between two identical
-displays. [`TreeChance`](src/main/java/fr/syuko/emicreatecompat/emi/bom/TreeChance.java) is the signal, fed from
+**Chance is posted onto recipes we did not build**, so `EXPECTED` survives JEI.
+[`ChanceInjector`](src/main/java/fr/syuko/emicreatecompat/chance/ChanceInjector.java) runs from `EmiRecipesMixin` at the
+`TAIL` of `EmiRecipes#bake` — after every plugin, JEMI included, which loads last and so cannot be decorated from our
+own `register()`. `TAIL` rather than `HEAD` because `bake` folds `EmiData.recipes` into the list on entry. It resolves
+the Minecraft recipe with `EmiRecipe#getBackingRecipe()`, polymorphic and already exactly right: the interface default
+looks up `getId()`, `JemiRecipe` overrides it with `originalId`, and both resolve through the `RecipeManager`. **Do not
+reach for `dev.emi.emi.jemi` to do this** — those classes carry `mezz.jei` field types and must not load without JEI.
+
+The write rule is one line: **touch an output only when `getChance() == 1`.** That single test spares our own recipes
+and every other mod's native EMI plugin, with no exclusion list.
+
+[`RecipeChances`](src/main/java/fr/syuko/emicreatecompat/create/recipe/RecipeChances.java) is the reader.
+`ProcessingRecipe#getRollableResults` covers Create and every addon built on it in one branch — that generality is the
+whole point of the layer. `SequencedAssemblyRecipe` needs its own: **`resultPool` holds weights, not probabilities.**
+The real figure is `getOutputChance()`, which is `resultPool.getFirst().getChance() / sum(chances)`. Feeding the raw
+weights to `setChance` produces a tree that looks chanced — gold highlight, toggle present — while the amounts never
+inflate, because the weights are either all `1` or greater than `1`. The gold comes from other recipes in the tree and
+hides the bug. **Verify a chance change by the numbers, not by the highlight**: 3 Rotation Speed Controllers ask for 3 ×
+5 per step under `=` and 4 × 5 under `≈`.
+
+The `≈`/`=` toggle only appears when the tree in front of the player actually has something chanced in it, so it stays
+hidden on trees that carry no chance at all. [
+`TreeChance`](src/main/java/fr/syuko/emicreatecompat/emi/bom/TreeChance.java) is the signal, fed from
 `ChanceStateMixin` **before** the `RAW` neutralization and reset on every `recalculateTree`. Reading it after the
 neutralization would hide the button as soon as `RAW` is on and strand the player in that mode. Gate on the tree, not on
 whether `CreateEmiPlugin` registered: `chanceAmounts` is global, so a Create-specific gate would still be mangling other
@@ -136,15 +168,18 @@ counts from the raw `MaterialNode#totalNeeded` while the tree displays the chanc
 tree shows 5 in the favorites bar and only drops once two items have been gathered. `TreeCostMixin` records the
 accumulated multiplier on each node through the `ChancedNode` interface, and `ChancedFavorites` applies it back.
 
-**Dependency rule:** `emi/` and `create/` do not know about each other. They meet in `mixin/` (UI injection) and in
-`category/` (the EMI plugin). Inside a `category/xxx/` package the boundary is kept by naming, and it is greppable —
-these four commands must all return nothing:
+**Dependency rule:** `emi/` and `create/` do not know about each other. They meet in exactly three places — `mixin/`
+(UI injection), `category/` (the EMI plugin) and `chance/` (the chance layer). Inside a `category/xxx/` package the
+boundary is kept by naming; `chance/` keeps it by depending on `create/` only through its vanilla-typed facade
+(`RecipeChances`, `ChancedStack`), never on `com.simibubi` directly. It is greppable — these five commands must all
+return nothing:
 
 ```bash
 grep -rl "dev\.emi" category/ | grep -v "EmiRecipe\.java$"          # only *EmiRecipe may see EMI
 grep -rl -e "com\.simibubi" -e "dev\.emi" --include="*Display.java" category/
 grep -rl "com\.simibubi" emi/
 grep -rl "dev\.emi" create/
+grep -rl "com\.simibubi" chance/                                    # chance/ goes through create/'s facade
 ```
 
 Prefer Create/EMI **public APIs** where they exist; use mixins for UI injection where they don't.
