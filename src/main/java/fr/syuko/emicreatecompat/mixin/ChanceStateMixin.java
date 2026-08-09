@@ -2,6 +2,7 @@ package fr.syuko.emicreatecompat.mixin;
 
 import dev.emi.emi.bom.ChanceState;
 import fr.syuko.emicreatecompat.emi.bom.BomAmountMode;
+import fr.syuko.emicreatecompat.emi.bom.TreeChance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,6 +13,7 @@ public abstract class ChanceStateMixin {
 
     @Inject(method = "produce", at = @At("HEAD"), cancellable = true)
     private void emicreatecompat$keepProduceFlat(float chance, CallbackInfoReturnable<ChanceState> cir) {
+        TreeChance.observe(chance);
         if (BomAmountMode.rawAmounts()) {
             cir.setReturnValue((ChanceState) (Object) this);
         }
@@ -19,6 +21,7 @@ public abstract class ChanceStateMixin {
 
     @Inject(method = "consume", at = @At("HEAD"), cancellable = true)
     private void emicreatecompat$keepConsumeFlat(float chance, CallbackInfoReturnable<ChanceState> cir) {
+        TreeChance.observe(chance);
         if (BomAmountMode.rawAmounts()) {
             cir.setReturnValue((ChanceState) (Object) this);
         }
