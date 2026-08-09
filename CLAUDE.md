@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-EMI for Create is a **client-side NeoForge mod** that adds features bridging **EMI** (recipe/item viewer) and
-**Create** (tech/automation mod). The first planned feature: when an EMI recipe tree is active (resource breakdown
-shown), display a category at the top of the Create stock UI listing the available Create-stock resources that match the
-recipe tree's ingredients.
+EMI for Create is a **client-side NeoForge mod** that adds features bridging **EMI** (recipe/item viewer) and **Create**
+(tech/automation mod). The first planned feature: when an EMI recipe tree is active (resource breakdown shown), display
+a category at the top of the Create stock UI listing the available Create-stock resources that match the recipe tree's
+ingredients.
 
 All features are display/UI oriented — treat this as a **client-only** mod (`Dist.CLIENT`); avoid adding server-side
 logic unless a feature genuinely requires it.
@@ -122,6 +122,14 @@ Under `RAW` the expected value then exists nowhere, so [
 `calculateCost()` pass runs inside `BomAmountMode.whileMeasuringExpectedCosts`, which suspends `rawAmounts()` for its
 duration, and the result is indexed per ingredient for the Total Cost tooltip. Ingredients with no chanced share are
 left out of the index so they gain no tooltip line.
+
+The `≈`/`=` toggle only appears when the tree in front of the player actually has something chanced in it — a tree whose
+Create recipes came from EMI's JEI bridge carries no chance at all, and the button would switch between two identical
+displays. [`TreeChance`](src/main/java/fr/syuko/emicreatecompat/emi/bom/TreeChance.java) is the signal, fed from
+`ChanceStateMixin` **before** the `RAW` neutralization and reset on every `recalculateTree`. Reading it after the
+neutralization would hide the button as soon as `RAW` is on and strand the player in that mode. Gate on the tree, not on
+whether `CreateEmiPlugin` registered: `chanceAmounts` is global, so a Create-specific gate would still be mangling other
+mods' chanced recipes, and it would make `emi/` depend on `plugin/`.
 
 Independently of the mode, `Config.alignChancedFavorites` works around an EMI inconsistency: `EmiFavorites#countRecipes`
 counts from the raw `MaterialNode#totalNeeded` while the tree displays the chanced amount, so a step reading 6 in the

@@ -1,6 +1,7 @@
 package fr.syuko.emicreatecompat.emi.bom;
 
 import dev.emi.emi.api.render.EmiTooltipComponents;
+import dev.emi.emi.bom.BoM;
 import fr.syuko.emicreatecompat.config.ChanceAmounts;
 import fr.syuko.emicreatecompat.config.Config;
 import net.minecraft.ChatFormatting;
@@ -38,6 +39,10 @@ public final class ChanceModeButton {
     public static final int SIZE = 16;
 
     private ChanceModeButton() {
+    }
+
+    public static boolean visible() {
+        return BoM.tree != null && TreeChance.present();
     }
 
     public static boolean contains(double mouseX, double mouseY) {

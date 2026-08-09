@@ -1,7 +1,6 @@
 package fr.syuko.emicreatecompat.mixin;
 
 import dev.emi.emi.EmiRenderHelper;
-import dev.emi.emi.bom.BoM;
 import dev.emi.emi.bom.ChanceState;
 import dev.emi.emi.bom.MaterialNode;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -9,6 +8,7 @@ import dev.emi.emi.screen.BoMScreen;
 import fr.syuko.emicreatecompat.emi.bom.ChanceModeButton;
 import fr.syuko.emicreatecompat.emi.bom.ChancedProduction;
 import fr.syuko.emicreatecompat.emi.bom.ExpectedCostIndex;
+import fr.syuko.emicreatecompat.emi.bom.TreeChance;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,11 +37,13 @@ public abstract class BoMScreenMixin {
 
     @Inject(method = "recalculateTree", at = @At("HEAD"))
     private void emicreatecompat$measureExpectedCosts(CallbackInfo ci) {
+        TreeChance.reset();
         ExpectedCostIndex.rebuild();
     }
 
     @Inject(method = "onClose", at = @At("TAIL"), remap = true)
     private void emicreatecompat$dropExpectedCosts(CallbackInfo ci) {
+        TreeChance.reset();
         ExpectedCostIndex.clear();
     }
 
@@ -51,7 +53,7 @@ public abstract class BoMScreenMixin {
                                                         int mouseY,
                                                         float delta,
                                                         CallbackInfo ci) {
-        if (BoM.tree == null) {
+        if (!ChanceModeButton.visible()) {
             return;
         }
 
@@ -67,7 +69,7 @@ public abstract class BoMScreenMixin {
 
     @Inject(method = "getHoveredStack", at = @At("HEAD"), cancellable = true)
     private void emicreatecompat$ignoreStacksUnderButton(int mouseX, int mouseY, CallbackInfoReturnable<Object> cir) {
-        if (BoM.tree != null && ChanceModeButton.contains(mouseX, mouseY)) {
+        if (ChanceModeButton.visible() && ChanceModeButton.contains(mouseX, mouseY)) {
             cir.setReturnValue(null);
         }
     }
@@ -77,7 +79,7 @@ public abstract class BoMScreenMixin {
                                                   double mouseY,
                                                   int button,
                                                   CallbackInfoReturnable<Boolean> cir) {
-        if (BoM.tree == null || button != 0 || !ChanceModeButton.contains(mouseX, mouseY)) {
+        if (!ChanceModeButton.visible() || button != 0 || !ChanceModeButton.contains(mouseX, mouseY)) {
             return;
         }
 
