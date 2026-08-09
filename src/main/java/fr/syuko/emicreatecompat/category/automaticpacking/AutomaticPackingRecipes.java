@@ -1,7 +1,6 @@
 package fr.syuko.emicreatecompat.category.automaticpacking;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.kinetics.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import fr.syuko.emicreatecompat.category.basin.BasinDisplay;
@@ -12,10 +11,7 @@ import fr.syuko.emicreatecompat.create.recipe.HeatRequirement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +29,9 @@ public final class AutomaticPackingRecipes {
 
         List<BasinDisplay> displays = new ArrayList<>();
 
-        for (RecipeHolder<?> holder : manager.getRecipes()) {
-            if (!(holder.value() instanceof CraftingRecipe recipe) || recipe instanceof MechanicalCraftingRecipe || !MechanicalPressBlockEntity.canCompress(
-                    recipe) || AllRecipeTypes.shouldIgnoreInAutomation(holder)) {
+        for (RecipeHolder<CraftingRecipe> holder : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
+            CraftingRecipe recipe = holder.value();
+            if (!MechanicalPressBlockEntity.canCompress(recipe) || AllRecipeTypes.shouldIgnoreInAutomation(holder)) {
                 continue;
             }
 
