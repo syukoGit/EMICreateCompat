@@ -8,10 +8,7 @@ import fr.syuko.emicreatecompat.category.basin.BasinDisplay;
 import fr.syuko.emicreatecompat.category.basin.BasinDisplays;
 import fr.syuko.emicreatecompat.create.recipe.BasinRecipes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +25,10 @@ public final class AutomaticShapelessRecipes {
 
         List<BasinDisplay> displays = new ArrayList<>();
 
-        for (RecipeHolder<?> holder : manager.getRecipes()) {
-            if (!(holder.value() instanceof CraftingRecipe recipe) || recipe instanceof ShapedRecipe || BasinRecipes.present(
-                                                                                                                            recipe.getIngredients())
-                                                                                                                    .size() <= 1 || MechanicalPressBlockEntity.canCompress(
+        for (RecipeHolder<CraftingRecipe> holder : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
+            CraftingRecipe recipe = holder.value();
+            if (recipe instanceof ShapedRecipe || BasinRecipes.present(recipe.getIngredients())
+                                                              .size() <= 1 || MechanicalPressBlockEntity.canCompress(
                     recipe) || AllRecipeTypes.shouldIgnoreInAutomation(holder)) {
                 continue;
             }
