@@ -66,7 +66,7 @@ public abstract class BasinEmiRecipe extends BasicEmiRecipe {
         }
 
         for (ChancedStack output : display.itemOutputs()) {
-            outputs.add(EmiStack.of(output.stack()).setChance(output.chance()));
+            outputs.add(EmiStack.of(output.stack()));
         }
 
         for (FluidStack output : display.fluidOutputs()) {

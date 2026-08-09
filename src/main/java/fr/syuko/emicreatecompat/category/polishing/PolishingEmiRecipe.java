@@ -32,7 +32,7 @@ public class PolishingEmiRecipe extends BasicEmiRecipe {
         inputs.add(EmiIngredient.of(display.input()));
         catalysts.add(EmiStack.of(AllItems.SAND_PAPER.get()));
         catalysts.add(EmiStack.of(AllItems.RED_SAND_PAPER.get()));
-        outputs.add(EmiStack.of(display.output()).setChance(display.chance()));
+        outputs.add(EmiStack.of(display.output()));
     }
 
     @Override

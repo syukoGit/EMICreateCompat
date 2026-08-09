@@ -32,7 +32,7 @@ public class MillingEmiRecipe extends BasicEmiRecipe {
         inputs.add(EmiIngredient.of(display.input()));
         catalysts.add(EmiStack.of(AllBlocks.MILLSTONE.get()));
         for (ChancedStack output : display.outputs()) {
-            outputs.add(EmiStack.of(output.stack()).setChance(output.chance()));
+            outputs.add(EmiStack.of(output.stack()));
         }
     }
 

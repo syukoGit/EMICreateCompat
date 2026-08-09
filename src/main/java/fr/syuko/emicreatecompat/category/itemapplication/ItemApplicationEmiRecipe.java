@@ -45,7 +45,7 @@ public class ItemApplicationEmiRecipe extends BasicEmiRecipe {
         inputs.add(EmiIngredient.of(display.processed()));
         inputs.add(EmiIngredient.of(display.heldItem()));
         for (ChancedStack output : display.outputs()) {
-            outputs.add(EmiStack.of(output.stack()).setChance(output.chance()));
+            outputs.add(EmiStack.of(output.stack()));
         }
     }
 

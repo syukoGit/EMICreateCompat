@@ -47,7 +47,7 @@ public class DeployingEmiRecipe extends BasicEmiRecipe {
         catalysts.add(EmiStack.of(AllBlocks.DEPOT.get()));
         catalysts.add(EmiStack.of(AllItems.BELT_CONNECTOR.get()));
         for (ChancedStack output : display.outputs()) {
-            outputs.add(EmiStack.of(output.stack()).setChance(output.chance()));
+            outputs.add(EmiStack.of(output.stack()));
         }
     }
 

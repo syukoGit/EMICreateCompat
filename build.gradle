@@ -81,6 +81,13 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
+configurations {
+    jeiMod {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
 dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}"
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
@@ -92,7 +99,25 @@ dependencies {
     compileOnly "dev.engine-room.flywheel:flywheel-neoforge-api-1.21.1:${flywheel_version}"
     runtimeOnly "dev.engine-room.flywheel:flywheel-neoforge-1.21.1:${flywheel_version}"
 
-    clientWithJeiAdditionalRuntimeClasspath "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+    jeiMod "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+}
+
+var installJeiMod = tasks.register("installJeiMod", Copy) {
+    from configurations.jeiMod
+    into file('run/mods')
+}
+
+var removeJeiMod = tasks.register("removeJeiMod", Delete) {
+    delete fileTree('run/mods') { include 'jei-*.jar' }
+}
+
+tasks.named("prepareClientWithJeiRun") {
+    dependsOn installJeiMod
+    mustRunAfter removeJeiMod
+}
+
+tasks.named("prepareClientRun") {
+    dependsOn removeJeiMod
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
