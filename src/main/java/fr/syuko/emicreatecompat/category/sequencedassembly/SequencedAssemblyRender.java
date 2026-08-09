@@ -23,6 +23,10 @@ public final class SequencedAssemblyRender {
 
     private static final int CHANCE_LABEL_COLOR = 0xefefef;
 
+    private static final int GENERIC_MACHINE_SIZE = 16;
+
+    private static final int GENERIC_MACHINE_Y = 46;
+
     private SequencedAssemblyRender() {
     }
 
@@ -126,6 +130,11 @@ public final class SequencedAssemblyRender {
                                  : step.fluids().getFirst(),
                                  index);
                 pose.popPose();
+            }
+            case GENERIC -> {
+                if (!step.machine().isEmpty()) {
+                    graphics.renderItem(step.machine(), center - GENERIC_MACHINE_SIZE / 2, GENERIC_MACHINE_Y);
+                }
             }
         }
     }

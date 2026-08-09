@@ -6,19 +6,24 @@ import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class SequencedAssemblyRecipes {
 
@@ -62,54 +67,82 @@ public final class SequencedAssemblyRecipes {
         List<AssemblyStep> steps = new ArrayList<>();
 
         for (SequencedRecipe<?> sequenced : recipe.getSequence()) {
-            AssemblyStep step = step(sequenced);
-            if (step == null) {
-                return List.of();
-            }
-            steps.add(step);
+            steps.add(step(sequenced));
         }
 
         return List.copyOf(steps);
     }
 
     private static AssemblyStep step(SequencedRecipe<?> sequenced) {
-        ProcessingRecipe<?, ?> wrapped = sequenced.getRecipe();
+        AssemblyStep known = knownStep(sequenced.getRecipe());
 
+        return known != null
+               ? known
+               : genericStep(sequenced);
+    }
+
+    private static AssemblyStep knownStep(ProcessingRecipe<?, ?> wrapped) {
         if (wrapped instanceof PressingRecipe) {
-            return new AssemblyStep(AssemblyStep.StepKind.PRESSING, null, List.of(), false);
+            return AssemblyStep.pressing();
         }
 
         if (wrapped instanceof CuttingRecipe) {
-            return new AssemblyStep(AssemblyStep.StepKind.CUTTING, null, List.of(), false);
+            return AssemblyStep.cutting();
         }
 
         if (wrapped instanceof DeployerApplicationRecipe deploying) {
             if (deploying.getIngredients().size() < 2) {
                 return null;
             }
-            return new AssemblyStep(AssemblyStep.StepKind.DEPLOYING,
-                                    deploying.getIngredients().get(1),
-                                    List.of(),
-                                    deploying.shouldKeepHeldItem());
+            return AssemblyStep.deploying(deploying.getIngredients().get(1), deploying.shouldKeepHeldItem());
         }
 
         if (wrapped instanceof FillingRecipe filling) {
             if (filling.getFluidIngredients().isEmpty()) {
                 return null;
             }
-            SizedFluidIngredient ingredient = filling.getFluidIngredients().getFirst();
-            List<FluidStack> options = new ArrayList<>();
-            for (FluidStack option : ingredient.getFluids()) {
-                FluidStack sized = option.copy();
-                sized.setAmount(ingredient.amount());
-                options.add(sized);
-            }
+            List<FluidStack> options = sizedFluids(filling.getFluidIngredients().getFirst());
             if (options.isEmpty()) {
                 return null;
             }
-            return new AssemblyStep(AssemblyStep.StepKind.SPOUTING, null, List.copyOf(options), false);
+            return AssemblyStep.spouting(options);
         }
 
         return null;
+    }
+
+    private static AssemblyStep genericStep(SequencedRecipe<?> sequenced) {
+        IAssemblyRecipe assembly = sequenced.getAsAssemblyRecipe();
+
+        List<Ingredient> ingredients = new ArrayList<>();
+        assembly.addAssemblyIngredients(ingredients);
+
+        List<SizedFluidIngredient> fluidIngredients = new ArrayList<>();
+        assembly.addAssemblyFluidIngredients(fluidIngredients);
+
+        Set<ItemLike> machines = new LinkedHashSet<>();
+        assembly.addRequiredMachines(machines);
+
+        return AssemblyStep.generic(ingredients.isEmpty()
+                                    ? null
+                                    : ingredients.getFirst(),
+                                    fluidIngredients.isEmpty()
+                                    ? List.of()
+                                    : sizedFluids(fluidIngredients.getFirst()),
+                                    machines.isEmpty()
+                                    ? ItemStack.EMPTY
+                                    : new ItemStack(machines.iterator().next()));
+    }
+
+    private static List<FluidStack> sizedFluids(SizedFluidIngredient ingredient) {
+        List<FluidStack> options = new ArrayList<>();
+
+        for (FluidStack option : ingredient.getFluids()) {
+            FluidStack sized = option.copy();
+            sized.setAmount(ingredient.amount());
+            options.add(sized);
+        }
+
+        return List.copyOf(options);
     }
 }
