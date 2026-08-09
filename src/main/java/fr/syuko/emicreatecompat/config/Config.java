@@ -19,7 +19,7 @@ public final class Config {
                                                                                                   " ALWAYS = as soon as an EMI recipe tree is active,",
                                                                                                   " CRAFTING_MODE_ONLY = only while EMI's recipe-tree (crafting) view is enabled.")
                                                                                           .defineEnum("treeVisibility",
-                                                                                                      TreeVisibility.ALWAYS);
+                                                                                                      TreeVisibility.CRAFTING_MODE_ONLY);
 
     private static final ModConfigSpec.BooleanValue COUNT_PENDING_ORDER = BUILDER.comment(
             "Count items already queued in the Stock Keeper order basket",
