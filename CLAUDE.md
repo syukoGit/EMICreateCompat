@@ -31,8 +31,15 @@ Use the Gradle wrapper (`./gradlew` on bash, `gradlew.bat` on cmd). Build config
 ./gradlew compileJava        # fast compile check
 ./gradlew build              # full build + jar into build/libs
 ./gradlew runClient          # launch Minecraft client with the mod (dev)
+./gradlew runClientWithJei   # same, with JEI installed, to exercise EMI's JEMI bridge
 ./gradlew runData            # run data generators (output: src/generated/resources)
 ```
+
+`clientWithJei` is a second `neoForge.runs` entry whose `clientWithJeiAdditionalRuntimeClasspath` carries JEI, so JEI
+reaches that run only — `runClient` stays JEI-free. Both share the `run/` directory, so `recipeRegistration` in
+`run/config/emicreatecompat-client.toml` carries over between them, and it decides what the JEI run actually exercises:
+under `AUTO` the plugin stands down and Create's recipes arrive through the JEMI bridge, under `ALWAYS` both sets are
+registered and every Create category shows twice.
 
 There are no tests yet. Gametests are wired up (`neoforge.enabledGameTestNamespaces=emicreatecompat`) and run via the
 `runGameTestServer` config / the in-game `/test` command if added later.
